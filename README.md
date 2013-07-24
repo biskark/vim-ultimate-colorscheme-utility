@@ -30,8 +30,8 @@ git clone https://github.com/biskark/vim-ultimate-colorscheme-utility.git
 
 TODO
 ====
-- [] Simplify Key Mappings
-- [] Write Documentation
-- [] Add Cycle through favorites function
-- [] Add filetype specific cycling
-- [] Add interactive interface to color cycling
+- [ ] Simplify Key Mappings
+- [ ] Write Documentation
+- [ ] Add Cycle through favorites function
+- [ ] Add filetype specific cycling
+- [ ] Add interactive interface to color cycling
