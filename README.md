@@ -5,7 +5,7 @@ Vim plugin that enables colorscheme browsing, choosing favorites, and automatic/
 
 Features
 ========
-TODO
+Todo
 
 Required Vim Options
 ====================
@@ -28,10 +28,15 @@ git clone https://github.com/biskark/vim-ultimate-colorscheme-utility.git
 ### via Vundle, the unknown method
 1. ???, I don't use vundle, but it's similar to Pathogen
 
-TODO
+Todo
 ====
 - [ ] Simplify Key Mappings
 - [ ] Write Documentation
 - [ ] Add Cycle through favorites function
 - [ ] Add filetype specific cycling
 - [ ] Add interactive interface to color cycling
+- [ ] Automatic saving on exit
+
+My Preferences
+==============
+Todo
