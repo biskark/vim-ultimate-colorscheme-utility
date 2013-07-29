@@ -2,17 +2,30 @@
 " Author: Kevin Biskar
 " Version: 0.0.0
 "
-" Plugin that allows for easy browsing of different installed colorschemes
+" Plugin that allows for easy browsing of different installed colorschemes.
+" Also allows for the global or filetype based favorites that enables 
+" automatic color switching when changing buffers.
 
-" Temporary Key Mappings {{{
-nnoremap <leader>b :call <SID>CycleAll(1)<cr>
-nnoremap <leader>r :call <SID>AddFavorite()<cr>
-nnoremap <leader>k :call <SID>RemoveFavorite()<cr>
-nnoremap <leader>s :call <SID>SeeFavorites()<cr>
-nnoremap <leader>w :call <SID>WriteFavorites()<cr>
-nnoremap <leader>l :call <SID>LoadFavorites()<cr>
+if exists('did_browser_vim') || &cp || version < 700
+    finish
+endif
+let did_browser_vim = 1
+
+" Default Key Mappings {{{
+nnoremap <leader>b  :call <SID>CycleAll(1)<cr>
+nnoremap <leader>r  :call <SID>AddFavorite()<cr>
+nnoremap <leader>k  :call <SID>RemoveFavorite()<cr>
+nnoremap <leader>s  :call <SID>SeeFavorites()<cr>
+nnoremap <leader>w  :call <SID>WriteFavorites()<cr>
+nnoremap <leader>l  :call <SID>LoadFavorites()<cr>
 nnoremap <leader>ff :call <SID>CycleFavorites()<cr>
 " END Temporary Key Mappings }}}
+
+" Global Variables and Default Settings {{{
+let g:ulti_color_filetype  = 1
+let g:ulti_color_auto_save = 1
+let g:ulti_color_auto_load = 1
+" END Global Variables }}}
 
 " Script Variables {{{
 let s:index = -1
@@ -239,10 +252,15 @@ endfunction
 
 " s:SetFavorite {{{
 " Function that detects filetype and sets the colorscheme to a preferred color
-" for that filetype.
+" for that filetype. On startup, g:colors_name may not be set, so checks for
+" that to.
 function! s:SetFavorite()
     let ft = &filetype
+    if exists('g:colors_name') == 0
+        let g:colors_name = ''
+    endif
     if has_key(s:favorites, ft) && index(s:favorites[ft], g:colors_name) == -1
+            \ && len(s:favorites[ft]) > 0
         call <SID>RandomFavorite()
     endif
 endfunction
@@ -265,21 +283,26 @@ function! s:RandomFavorite()
 endfunction
 " END RandomFavorite }}}
 
-" Automatically called on load {{{
+" Automatically called on startup {{{
 call <SID>GetAllColors()
-call <SID>LoadFavorites()
+if g:ulti_color_auto_load
+    call <SID>LoadFavorites()
+endif
 " END Automatic calls }}}
 
 " Automatically called on quit {{{
 augroup UltiVimColor
     autocmd!
-    autocmd BufWinLeave * :call <SID>WriteFavorites()
+    if g:ulti_color_auto_save
+        autocmd BufWinLeave * :call <SID>WriteFavorites()
+    endif
 augroup END
 " END Automatic called on quit }}}
 
 " Automatically called on buffer enter {{{
 " Useful for automatic filetype list choosing
 augroup UltiVimFileType
-    autocmd! BufEnter * call <SID>SetFavorite()
+    autocmd!
+    autocmd BufEnter * call <SID>SetFavorite()
 augroup END
 " END Automatic called on buffer enter }}}

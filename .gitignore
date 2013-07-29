@@ -1,2 +1,4 @@
 # Default Favorites Settings
 plugin/browser.csv
+*.py
+*.pl
