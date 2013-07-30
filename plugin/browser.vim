@@ -11,21 +11,26 @@ if exists('did_browser_vim') || &cp || version < 700
 endif
 let did_browser_vim = 1
 
-" Default Key Mappings {{{
-nnoremap <leader>b  :call <SID>CycleAll(1)<cr>
-nnoremap <leader>r  :call <SID>AddFavorite()<cr>
-nnoremap <leader>k  :call <SID>RemoveFavorite()<cr>
-nnoremap <leader>s  :call <SID>SeeFavorites()<cr>
-nnoremap <leader>w  :call <SID>WriteFavorites()<cr>
-nnoremap <leader>l  :call <SID>LoadFavorites()<cr>
-nnoremap <leader>ff :call <SID>CycleFavorites()<cr>
-" END Temporary Key Mappings }}}
-
 " Global Variables and Default Settings {{{
+let g:ulti_color_default_keys = 1
 let g:ulti_color_filetype  = 1
 let g:ulti_color_auto_save = 1
 let g:ulti_color_auto_load = 1
+let g:ulti_color_check_favorite_change = 1
+let g:ulti_color_always_random = 0
 " END Global Variables }}}
+
+" Default Key Mappings {{{
+if g:ulti_color_default_keys
+    nnoremap <leader>b  :call <SID>CycleAll(1)<cr>
+    nnoremap <leader>r  :call <SID>AddFavorite()<cr>
+    nnoremap <leader>k  :call <SID>RemoveFavorite()<cr>
+    nnoremap <leader>s  :call <SID>SeeFavorites()<cr>
+    nnoremap <leader>w  :call <SID>WriteFavorites()<cr>
+    nnoremap <leader>l  :call <SID>LoadFavorites()<cr>
+    nnoremap <leader>ff :call <SID>CycleFavorites()<cr>
+endif
+" END Temporary Key Mappings }}}
 
 " Script Variables {{{
 let s:index = -1
@@ -257,10 +262,15 @@ endfunction
 function! s:SetFavorite()
     let ft = &filetype
     if exists('g:colors_name') == 0
-        let g:colors_name = ''
+        let g:colors_name = 'default'
     endif
-    if has_key(s:favorites, ft) && index(s:favorites[ft], g:colors_name) == -1
-            \ && len(s:favorites[ft]) > 0
+    if (has_key(s:favorites, ft) && 
+                \ index(s:favorites[ft], g:colors_name) == -1 &&
+                \ len(s:favorites[ft]) > 0)
+        call <SID>RandomFavorite()
+    elseif has_key(s:favorites, 'global') && 
+                \ index(s:favorites['global'], g:colors_name) == -1 &&
+                \ len(s:favorites['global']) > 0
         call <SID>RandomFavorite()
     endif
 endfunction
@@ -268,9 +278,16 @@ endfunction
 
 " s:RandomFavorite {{{
 " Function that randomnly chooses a favorite for the selected filetype or
-" chooses a random global if no normal filetype exists
+" chooses a random global if no normal filetype exists. If no global favorites
+" set, returns -1.
 function! s:RandomFavorite()
     let ft = &filetype
+    if has_key(s:favorites, ft) == 0 || len(s:favorites[ft]) == 0
+        if len(s:favorites['global']) == 0
+            return -1
+        endif
+        let ft = 'global'
+    endif
     let limit = len(s:favorites[ft])
     let index = str2nr(matchstr(reltimestr(reltime()), '\v\.@<=\d+')[1:]) % limit
     try
@@ -303,6 +320,13 @@ augroup END
 " Useful for automatic filetype list choosing
 augroup UltiVimFileType
     autocmd!
-    autocmd BufEnter * call <SID>SetFavorite()
+    if g:ulti_color_always_random
+        autocmd BufEnter * call <SID>RandomFavorite()
+    elseif g:ulti_color_filetype
+        autocmd BufEnter * call <SID>SetFavorite()
+    endif
+    if g:ulti_color_check_favorite_change
+        autocmd BufEnter * call <SID>LoadFavorites()
+    endif
 augroup END
 " END Automatic called on buffer enter }}}
