@@ -232,7 +232,10 @@ function! s:CycleFavorites(step)
         return -1
     endif
 
-    let i = index(s:favorites[filetype], g:colors_name)
+    let i = 0
+    if exists('g:colors_name')
+        let i = index(s:favorites[filetype], g:colors_name)
+    endif
     " Check if last item and set it to index -1
     if i == len(s:favorites[filetype]) - 1 && a:step == 1
         let i = -1
@@ -332,7 +335,12 @@ endfunction
 " s:SeeFavorites() {{{
 " Function that lists currently stored favorites.
 function! s:SeeFavorites()
-    echo s:favorites
+    for language in keys(s:favorites)
+        echo language
+        for scheme in s:favorites[language]
+            echo "  " . scheme
+        endfor
+    endfor
 endfunction
 " END SeeFavorites }}}
 
