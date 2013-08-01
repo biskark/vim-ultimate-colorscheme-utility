@@ -1,10 +1,13 @@
 " File: browser.vim
 " Author: Kevin Biskar
-" Version: 0.0.0
+" Version: 0.1.0
 "
 " Plugin that allows for easy browsing of different installed colorschemes.
 " Also allows for the global or filetype based favorites that enables 
 " automatic color switching when changing buffers.
+"
+" DO NOT MODIFY THIS FILE DIRECTLY.
+" Instead, change the global variables in your vimrc file.
 
 if exists('did_browser_vim') || &cp || version < 700
     finish
@@ -12,25 +15,133 @@ endif
 let did_browser_vim = 1
 
 " Global Variables and Default Settings {{{
-let g:ulti_color_default_keys = 1
-let g:ulti_color_filetype  = 1
-let g:ulti_color_auto_save = 1
-let g:ulti_color_auto_load = 1
-let g:ulti_color_check_favorite_change = 1
-let g:ulti_color_always_random = 0
+" Read the help docs for more information on these effects.
+
+" Sets the default key bindings. If this option is not set, you must set all
+" the key bindings in your vimrc manually. Any option you don't set is
+" functionality you cannot get.
+" If it is set, you may still set some key bindings and allow 
+" Ultimate-Colorscheme-Utility to set the rest.
+if !exists('g:ulti_color_default_keys')
+    let g:ulti_color_default_keys = 1
+endif
+
+" Uses filetype specific favorites.
+if !exists('g:ulti_color_filetype')
+    let g:ulti_color_filetype = 1
+endif
+
+" Automatically saves favorites on Vim exit.
+if !exists('g:ulti_color_auto_save')
+    let g:ulti_color_auto_save = 1
+endif
+
+" Automatically loads favorites on Vim start.
+if !exists('g:ulti_color_auto_load')
+    let g:ulti_color_auto_load = 1
+endif
+
+" Adds favorite colorscheme to 'global' favorites in addition to filetype
+" favorites.
+if !exists('g:ulti_color_quick_add')
+    let g:ulti_color_quick_add = 1
+endif
+
+" Echoes messages
+if !exists('g:ulti_color_verbose')
+    let g:ulti_color_verbose = 1
+endif
+
+" Removes favorite colorscheme from 'global' favorites in addition to
+" filetype favorites.
+if !exists('g:ulti_color_quick_remove')
+    let g:ulti_color_quick_remove = 0
+endif
+
+" Chooses a random favorite colorscheme on each buf enter.
+if !exists('g:ulti_color_always_random')
+    let g:ulti_color_always_random = 0
+endif
 " END Global Variables }}}
 
 " Default Key Mappings {{{
 if g:ulti_color_default_keys
-    nnoremap <leader>b  :call <SID>CycleAll(1)<cr>
-    nnoremap <leader>r  :call <SID>AddFavorite()<cr>
-    nnoremap <leader>k  :call <SID>RemoveFavorite()<cr>
-    nnoremap <leader>s  :call <SID>SeeFavorites()<cr>
-    nnoremap <leader>w  :call <SID>WriteFavorites()<cr>
-    nnoremap <leader>l  :call <SID>LoadFavorites()<cr>
-    nnoremap <leader>ff :call <SID>CycleFavorites()<cr>
+    if !exists('g:ulti_color_Next_Global')
+        let g:ulti_color_Next_Global = '<leader><leader>n'
+    endif
+    if !exists('g:ulti_color_Prev_Global')
+        let g:ulti_color_Prev_Global = '<leader><leader>N'
+    endif
+    if !exists('g:ulti_color_Next_Fav')
+        let g:ulti_color_Next_Fav = '<leader><leader>f'
+    endif
+    if !exists('g:ulti_color_Prev_Fav')
+        let g:ulti_color_Prev_Fav = '<leader><leader>F'
+    endif
+    if !exists('g:ulti_color_Add_Fav')
+        let g:ulti_color_Add_Fav = '<leader><leader>a'
+    endif
+    if !exists('g:ulti_color_Remove_Fav')
+        let g:ulti_color_Remove_Fav = '<leader><leader>A'
+    endif
+    if !exists('g:ulti_color_Write_Fav')
+        let g:ulti_color_Write_Fav = '<leader><leader>s'
+    endif
+    if !exists('g:ulti_color_Load_Fav')
+        let g:ulti_color_Load_Fav = '<leader><leader>S'
+    endif
+    if !exists('g:ulti_color_See_Fav')
+        let g:ulti_color_See_Fav = '<leader><leader>q'
+    endif
 endif
-" END Temporary Key Mappings }}}
+" END Default Key Mappings }}}
+
+" Assign Mappings to Functions {{{
+if exists('g:ulti_color_Next_Global')
+    exec 'nnoremap ' . g:ulti_color_Next_Global .
+                \ ' :call <SID>CycleAll(1)<cr>'
+endif
+
+if exists('g:ulti_color_Prev_Global')
+    exec 'nnoremap ' . g:ulti_color_Prev_Global . 
+                \ ' :call <SID>CycleAll(-1)<cr>'
+endif
+
+if exists('g:ulti_color_Next_Fav')
+    exec 'nnoremap ' . g:ulti_color_Next_Fav . 
+                \ ' :call <SID>CycleFavorites(1)<cr>'
+endif
+
+if exists('g:ulti_color_Prev_Fav')
+    exec 'nnoremap ' . g:ulti_color_Prev_Fav . 
+                \ ' :call <SID>CycleFavorites(-1)<cr>'
+endif
+
+if exists('g:ulti_color_Add_Fav')
+    exec 'nnoremap ' . g:ulti_color_Add_Fav . 
+                \ ' :call <SID>AddFavorite()<cr>'
+endif
+
+if exists('g:ulti_color_Remove_Fav')
+    exec 'nnoremap ' . g:ulti_color_Remove_Fav . 
+                \ ' :call <SID>RemoveFavorite()<cr>'
+endif
+
+if exists('g:ulti_color_Write_Fav')
+    exec 'nnoremap ' . g:ulti_color_Write_Fav . 
+                \ ' :call <SID>WriteFavorite()<cr>'
+endif
+
+if exists('g:ulti_color_Load_Fav')
+    exec 'nnoremap ' . g:ulti_color_Load_Fav . 
+                \ ' :call <SID>LoadFavorite()<cr>'
+endif
+
+if exists('g:ulti_color_See_Fav')
+    exec 'nnoremap ' . g:ulti_color_See_Fav . 
+                \ ' :call <SID>SeeFavorites()<cr>'
+endif
+" END Assign Functions }}}
 
 " Script Variables {{{
 let s:index = -1
@@ -41,6 +152,7 @@ let s:data_file = expand('<sfile>:p:r') . '.csv'
 let s:default_file = expand('<sfile>:p:h') . '/default.csv'
 " END script variables }}}
 
+" Script Functions {{{
 " s:GetAllColors() {{{
 " Main function for getting list of colorschemes.
 " If no list is given, it goes through all installed colorschemes instead.
@@ -87,6 +199,9 @@ function! s:CycleAll(step)
     endif
     try
         execute 'colorscheme '. s:all_colors[s:index]
+        if g:ulti_color_verbose
+            echo s:all_colors[s:index]
+        endif
     catch /E185:/
         echom 'Invalid colorscheme ' . s:all_colors[s:index]
         return -1
@@ -100,7 +215,11 @@ endfunction
 " it's own favorites list and uses that. If filetype doesn't have favorites,
 " cycles through global favorites instead. Returns 0 if no problem or -1 if
 " no favorites are set.
-function! s:CycleFavorites()
+function! s:CycleFavorites(step)
+    if a:step != 1 && a:step != -1
+        return -1
+    endif
+
     " Set filetype to current or global
     let filetype = &filetype
     if !has_key(s:favorites, filetype)
@@ -115,13 +234,18 @@ function! s:CycleFavorites()
 
     let i = index(s:favorites[filetype], g:colors_name)
     " Check if last item and set it to index -1
-    if i == len(s:favorites[filetype]) - 1
+    if i == len(s:favorites[filetype]) - 1 && a:step == 1
         let i = -1
+    elseif i == 0 && a:step == -1
+        let i = len(s:favorites[filetype])
     endif
     try
-        execute 'colorscheme ' . s:favorites[filetype][i + 1]
+        execute 'colorscheme ' . s:favorites[filetype][i + a:step]
+        if g:ulti_color_verbose
+            echo s:favorites[filetype][i + a:step]
+        endif
     catch /E185:/
-        echom 'Invalid colorscheme ' . s:favorites[filetype][i + 1]
+        echom 'Invalid colorscheme ' . s:favorites[filetype][i + a:step]
         return -1
     endtry
     return 0
@@ -130,56 +254,80 @@ endfunction
 
 " s:AddFavorite() {{{
 " Add a color to the favorites list, if no color given. Doesn't add duplicates.
-" If filetype is set, adds to global and current filetype. Else, adds only
-" to global
+" If filetype is set, adds to current filetype. Else, adds only to global.
+" If g:ulti_color_quick_add is set, also adds colorscheme to 'global'
+" favorites.
+" If g:ulti_color_quick_add is not set, only adds to 'global' if the
+" colorscheme is already in the filetype favorites.
 function! s:AddFavorite()
     let name = g:colors_name
+    if g:ulti_color_filetype
+        " Adds to filetype favorites
+        let ft = &filetype
+        if ft !=# ''
+            if !has_key(s:favorites, ft)
+                let s:favorites[ft] = []
+            endif
+            if index(s:favorites[ft], name) == -1
+                call add(s:favorites[ft], name)
+                if g:ulti_color_verbose
+                    echo "'" . name . "' added to " . ft . " favorites."
+                endif
+                if g:ulti_color_quick_add == 0
+                    return 0
+                endif
+            elseif g:ulti_color_verbose
+                echo "'" . name . "' already in " . ft . " favorites."
+            endif
+        endif
+    endif
+
     if !has_key(s:favorites, 'global')
         let s:favorites['global'] = []
     endif
     if index(s:favorites['global'], name) == -1
         call add(s:favorites['global'], name)
-        echo "'" . name . "' added to global favorites."
-    else
-        echo "'" . name . "' was already in global favorites."
-    endif
-
-    let ft = &filetype
-    if ft !=# ''
-        if !has_key(s:favorites, ft)
-            let s:favorites[ft] = []
+        if g:ulti_color_verbose
+            echo "'" . name . "' added to global favorites."
         endif
-        if index(s:favorites[ft], name) == -1
-            call add(s:favorites[ft], name)
-            echo "'" . name . "' added to " . ft . " favorites."
-        else
-            echo "'" . name . "' was already in " . ft . " favorites."
-        endif
+    elseif g:ulti_color_verbose
+        echo "'" . name . "' already in global favorites."
     endif
+    return 0
 endfunction
 " END AddFavorite }}}
 
 " s:RemoveFavorite() {{{
-" Removes a the current scheme from the favorites list from the given category.
+" Removes a the current scheme from the favorites list from the given filetype.
+" If g:ulti_color_quick_remove is set, will also remove from global favorites.
+" If g:ulti_color_quick_remove is not set, will only remove from global
+" favorites if it is not currently in the filetype favorites.
 function! s:RemoveFavorite()
     let name = g:colors_name
     let ft = &filetype
-    let i = index(s:favorites[ft], name)
-    if i != -1
-        unlet s:favorites[ft][i]
-        echo "'" . name . "' removed from " . ft . " favorites."
-    else
-        echo "'" . name . "' was not in " . ft . " favorites."
+    if has_key(s:favorites, ft) && index(s:favorites[ft], name) != -1
+        unlet s:favorites[ft][index(s:favorites[ft], name)]
+        if g:ulti_color_verbose
+            echo "'" . name . "' removed from " . ft . " favorites."
+        endif
+        if g:ulti_color_quick_remove == 0
+            return 0
+        endif
+    elseif g:ulti_color_verbose
+        echo "'" . name . "' wasn't in " . ft . " favorites."
     endif
-    let j = index(s:favorites['global'], name)
-    if j != -1
-        unlet s:favorites['global'][i]
-        echo "'" . name . "' removed from global favorites."
-    else
-        echo "'" . name . "' was not in global favorites."
+    if has_key(s:favorites, 'global') &&
+                \ index(s:favorites['global'], name) != -1
+        unlet s:favorites['global'][index(s:favorites['global'], name)]
+        if g:ulti_color_verbose
+            echo "'" . name . "' removed from global favorites."
+        endif
+    elseif g:ulti_color_verbose
+        echo "'" . name . "' wasn't in global favorites."
     endif
+    return 0
 endfunction
-" END RemoveFavorites }}}
+" END RemoveFavorite }}}
 
 " s:SeeFavorites() {{{
 " Function that lists currently stored favorites.
@@ -196,7 +344,7 @@ function! s:WriteFavorites()
     if !filewritable(s:data_file)
         let retval = writefile([], s:data_file)
         if retval != 0
-            echo "Cannot write to file " . s:data_file . "."
+            echom "Cannot write to file " . s:data_file . "."
             return retval
         endif
     endif
@@ -208,7 +356,7 @@ function! s:WriteFavorites()
         let retval = writefile(data, s:data_file)
         return retval
     else
-        echo s:data_file . " either doesn't exist or cannot be written to."
+        echom s:data_file . " either doesn't exist or cannot be written to."
         return -1
     endif
 endfunction
@@ -226,7 +374,7 @@ function! s:LoadFavorites()
         elseif filereadable(s:default_file)
             let file = s:default_file
         else
-            echo "Cannot load favorites, config file not readable"
+            echom "Cannot load favorites, config file not readable"
             return -1
         endif
 
@@ -261,7 +409,7 @@ endfunction
 " that to.
 function! s:SetFavorite()
     let ft = &filetype
-    if exists('g:colors_name') == 0
+    if !exists('g:colors_name')
         let g:colors_name = 'default'
     endif
     if (has_key(s:favorites, ft) && 
@@ -282,15 +430,21 @@ endfunction
 " set, returns -1.
 function! s:RandomFavorite()
     let ft = &filetype
-    if has_key(s:favorites, ft) == 0 || len(s:favorites[ft]) == 0
+    if g:ulti_color_filetype == 0 || has_key(s:favorites, ft) == 0 ||
+                \ len(s:favorites[ft]) == 0
         if len(s:favorites['global']) == 0
             return -1
         endif
         let ft = 'global'
     endif
     let limit = len(s:favorites[ft])
-    let index = str2nr(matchstr(reltimestr(reltime()), '\v\.@<=\d+')[1:]) % limit
+    let index = str2nr(matchstr(reltimestr(reltime()), '\v\.@<=\d+')[1:]) 
+                \ % limit
     try
+        execute 'colorscheme '. s:favorites[ft][index]
+        if g:ulti_color_verbose
+            echo s:favorites[ft][index]
+        endif
         execute 'colorscheme '. s:favorites[ft][index]
     catch /E185:/
         echom 'Invalid colorscheme ' . s:favorites[ft][index]
@@ -299,7 +453,9 @@ function! s:RandomFavorite()
     return 0
 endfunction
 " END RandomFavorite }}}
+" END Script Functions }}}
 
+" Auto Commands {{{
 " Automatically called on startup {{{
 call <SID>GetAllColors()
 if g:ulti_color_auto_load
@@ -317,16 +473,14 @@ augroup END
 " END Automatic called on quit }}}
 
 " Automatically called on buffer enter {{{
-" Useful for automatic filetype list choosing
-augroup UltiVimFileType
+" Used for automatic colorscheme choosing
+augroup UltiVimAutoScheme
     autocmd!
     if g:ulti_color_always_random
         autocmd BufEnter * call <SID>RandomFavorite()
-    elseif g:ulti_color_filetype
+    else
         autocmd BufEnter * call <SID>SetFavorite()
-    endif
-    if g:ulti_color_check_favorite_change
-        autocmd BufEnter * call <SID>LoadFavorites()
     endif
 augroup END
 " END Automatic called on buffer enter }}}
+" END Auto Commands }}}

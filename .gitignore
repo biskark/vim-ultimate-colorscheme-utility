@@ -1,4 +1,5 @@
 # Default Favorites Settings
 plugin/browser.csv
+doc/tags
 *.py
 *.pl
