@@ -78,6 +78,12 @@ if g:ulti_color_default_keys
     if !exists('g:ulti_color_Prev_Fav')
         let g:ulti_color_Prev_Fav = '<leader><leader>F'
     endif
+    if !exists('g:ulti_color_Next_Global_Fav')
+        let g:ulti_color_Next_Global_Fav = '<leader><leader>g'
+    endif
+    if !exists('g:ulti_color_Prev_Global_Fav')
+        let g:ulti_color_Prev_Global_Fav = '<leader><leader>G'
+    endif
     if !exists('g:ulti_color_Add_Fav')
         let g:ulti_color_Add_Fav = '<leader><leader>a'
     endif
@@ -109,12 +115,22 @@ endif
 
 if exists('g:ulti_color_Next_Fav')
     exec 'nnoremap ' . g:ulti_color_Next_Fav . 
-                \ ' :call <SID>CycleFavorites(1)<cr>'
+                \ ' :call <SID>CycleFileFavorites(1)<cr>'
 endif
 
 if exists('g:ulti_color_Prev_Fav')
     exec 'nnoremap ' . g:ulti_color_Prev_Fav . 
-                \ ' :call <SID>CycleFavorites(-1)<cr>'
+                \ ' :call <SID>CycleFileFavorites(-1)<cr>'
+endif
+
+if exists('g:ulti_color_Next_Global_Fav')
+    exec 'nnoremap ' . g:ulti_color_Next_Global_Fav . 
+                \ ' :call <SID>CycleGlobalFavorites(1)<cr>'
+endif
+
+if exists('g:ulti_color_Prev_Global_Fav')
+    exec 'nnoremap ' . g:ulti_color_Prev_Global_Fav . 
+                \ ' :call <SID>CycleGlobalFavorites(-1)<cr>'
 endif
 
 if exists('g:ulti_color_Add_Fav')
@@ -188,7 +204,7 @@ function! s:CycleAll(step)
         echom 'Could not load any colorschemes.'
         return -1
     endif
-    if s:index == -1
+    if s:index == -1 && exists('g:colors_name')
         let s:index = index(s:all_colors, g:colors_name)
     endif
     let s:index += a:step
@@ -210,23 +226,27 @@ function! s:CycleAll(step)
 endfunction
 " END CycleAll }}}
 
-" s:CycleFavorites() {{{
-" Steps one by one through favorites. Checks if the current filetype has
+" s:CycleFileFavorites() {{{
+" Steps one by one through file favorites. Checks if the current filetype has
 " it's own favorites list and uses that. If filetype doesn't have favorites,
 " cycles through global favorites instead. Returns 0 if no problem or -1 if
 " no favorites are set.
-function! s:CycleFavorites(step)
+" If the second argument is set to 1, defaults to global list.
+function! s:CycleFileFavorites(step, ...)
     if a:step != 1 && a:step != -1
         return -1
     endif
 
     " Set filetype to current or global
     let filetype = &filetype
-    if !has_key(s:favorites, filetype)
+    " If filetype explicitly ignored
+    if g:ulti_color_filetype == 0 || (a:0 == 1 && a:1 == 1)
         let filetype = 'global'
-    elseif len(s:favorites[filetype]) == 0
+    " If no favorites for filetype
+    elseif !has_key(s:favorites, filetype) || len(s:favorites[filetype]) == 0
         let filetype = 'global'
     endif
+
     " Return early if no favorites set
     if len(s:favorites[filetype]) == 0
         return -1
@@ -253,7 +273,14 @@ function! s:CycleFavorites(step)
     endtry
     return 0
 endfunction
-" END CycleFavorites }}}
+" END CycleFileFavorites }}}
+
+" s:CycleGlobalFavorites {{{
+" Steps through the global favorites list.
+function! s:CycleGlobalFavorites(step)
+    call <SID>CycleFileFavorites(a:step, 1)
+endfunction
+" END CycleGlobalFavorites }}}
 
 " s:AddFavorite() {{{
 " Add a color to the favorites list, if no color given. Doesn't add duplicates.
@@ -263,6 +290,9 @@ endfunction
 " If g:ulti_color_quick_add is not set, only adds to 'global' if the
 " colorscheme is already in the filetype favorites.
 function! s:AddFavorite()
+    if !exists('g:colors_name')
+        return -1
+    endif
     let name = g:colors_name
     if g:ulti_color_filetype
         " Adds to filetype favorites
@@ -306,6 +336,9 @@ endfunction
 " If g:ulti_color_quick_remove is not set, will only remove from global
 " favorites if it is not currently in the filetype favorites.
 function! s:RemoveFavorite()
+    if !exists('g:colors_name')
+        return -1
+    endif
     let name = g:colors_name
     let ft = &filetype
     if has_key(s:favorites, ft) && index(s:favorites[ft], name) != -1
@@ -404,7 +437,8 @@ endfunction
 " filetype favorites.
 function! s:InFavorites()
     let ft = &filetype
-    if has_key(s:favorites, ft) && index(s:favorites[ft], g:colors_name) != -1
+    if has_key(s:favorites, ft) && exists('g:colors_name') &&
+                \ index(s:favorites[ft], g:colors_name) != -1
         return 1
     endif
     return 0

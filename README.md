@@ -41,9 +41,16 @@ Note: All mappings are customizable, view the helptags for more information.
 ```vim
 <leader><leader>a    " Adds the current colorscheme to favorites
 <leader><leader>A    " Removes the current colorscheme to favorites
-<leader><leader>f    " Goes to next colorscheme in favorites
-<leader><leader>F    " Goes to previous colorscheme in favorites
+<leader><leader>f    " Goes to next colorscheme in filetype specific favorites
+<leader><leader>F    " Goes to previous colorscheme in filetype specific favorites
+<leader><leader>g    " Goes to next colorscheme in global favorites
+<leader><leader>G    " Goes to previous colorscheme in global favorites
 <leader><leader>n    " Goes to next colorscheme in all colors
 <leader><leader>N    " Goes to previous colorscheme in all colors
 <leader><leader>q    " Views all favorites
 ```
+
+Todo
+====
+- [x] Add separate mapping to browse only the global favorites.
+- [x] Bugfix: Make sure all calls to g:color\_name are protected.

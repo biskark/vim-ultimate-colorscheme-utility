@@ -79,6 +79,9 @@ Example:
     let g:ulti_color_Add_Fav = '<F8>'
 <
 
+                                                *g:ulti_color_Add_Fav*
+g:ulti_color_Add_Fav~
+Default: '<leader><leader>a'
 
 Mapping to add current colorscheme to favorite list.
 If |g:ulti_color_filetype| is set to 1, adds to a filetype specific list.
@@ -86,8 +89,10 @@ If |g:ulti_color_quick_add| is set to 1 as well, also adds to a global list.
 If the current colorscheme is already in the filetype specific list, it's
 added to the global list regardless of settings.
 
-    |g:ulti_color_Add_Fav| = '<leader><leader>a'
 
+                                                *g:ulti_color_Remove_Fav*
+g:ulti_color_Remove_Fav~
+Default: '<leader><leader>A'
 
 Mapping to remove current colorscheme from favorite list.
 First checks if it's in a filetype specific list.
@@ -95,44 +100,71 @@ If |g:ulti_color_quick_remove| is set to 1, also removes from the global list.
 If the current colorscheme is not in the filetype specific list, it's
 removed from the global list regardless of settings.
 
-    |g:ulti_color_Remove_Fav| = '<leader><leader>A'
 
+                                                *g:ulti_color_Next_Global*
+g:ulti_color_Next_Global~
+Default: '<leader><leader>n'
 
 Mapping that sets the colorscheme to the next colorscheme in the global list.
 
-    |g:ulti_color_Next_Global| = '<leader><leader>n'
 
+                                                *g:ulti_color_Prev_Global*
+g:ulti_color_Prev_Global~
+Default: '<leader><leader>N'
 
 Mapping that sets the colorscheme to the previous colorscheme in the global
 list.
 
-    |g:ulti_color_Prev_Global| = '<leader><leader>N'
 
+                                                *g:ulti_color_Next_Fav*
+g:ulti_color_Next_Fav~
+Default: '<leader><leader>f'
 
 Mapping that sets the colorscheme to the next colorscheme in the favorites
 list. If the current filetype has no favorites, uses the global list.
 
-    |g:ulti_color_Next_Fav| = '<leader><leader>f'
 
+                                                *g:ulti_color_Prev_Fav*
+g:ulti_color_Prev_Fav~
+Default: '<leader><leader>F'
 
 Mapping that sets the colorscheme to the previous colorscheme in the favorites
 list. If the current filetype has no favorites, uses the global list.
 
-    |g:ulti_color_Prev_Fav| = '<leader><leader>f'
+
+                                                *g:ulti_color_Next_Global_Fav*
+g:ulti_color_Next_Global_Fav~
+Default: '<leader><leader>g'
+
+Mapping that sets the colorscheme to the next colorscheme in the global
+favorites list, regardless of the current filetype.
+Useful if g:ulti_color_filetype is 1 but you still don't want to worry about
+the filetype. For example, if you start setting up favorites for a new
+filetype and want to conveniently browse through the current global favorites
+and see which ones look good.
 
 
-Mapping that displays the favorites list.
-    |g:ulti_color_See_Fav| = '<leader><leader>q'
+                                                *g:ulti_color_Prev_Global_Fav*
+g:ulti_color_Prev_Global_Fav~
+Default: '<leader><leader>G'
+
+Mapping that sets the colorscheme to the previous colorscheme in the global
+favorites list, regardless of the current filetype.
+Useful if g:ulti_color_filetype is 1 but you still don't want to worry about
+the filetype. For example, if you start setting up favorites for a new
+filetype and want to conveniently browse through the current global favorites
+and see which ones look good.
 
 
-Mapping that loads the favorites list from file.
-If |g:ulti_color_auto_load| is set, this is done automatically on startup so
-you likely will never use this. However, this may be handy if you have more
-than one instance of vim open and change the favorites in the other instance.
-Useful when combined with |g:ulti_color_Write_Fav|
+                                                *g:ulti_color_See_Fav*
+g:ulti_color_See_Fav~
+Default: '<leader><leader>q'
 
-    |g:ulti_color_Load_Fav| = '<leader><leader>S'
 
+
+                                                *g:ulti_color_Write_Fav*
+g:ulti_color_Write_Fav~
+Default: '<leader><leader>s'
 
 Mapping that writes the favorites list to file.
 If |g:ulti_color_auto_save| is set, this is done automatically on exit so
@@ -142,6 +174,18 @@ available to the other instance. Useful when combined with
 |g:ulti_color_Load_Fav|.
 
     |g:ulti_color_Write_Fav| = '<leader><leader>S'
+
+
+                                                *g:ulti_color_Load_Fav*
+g:ulti_color_Load_Fav~
+Default: '<leader><leader>S'
+
+Mapping that loads the favorites list from file.
+If |g:ulti_color_auto_load| is set, this is done automatically on startup so
+you likely will never use this. However, this may be handy if you have more
+than one instance of vim open and change the favorites in the other instance.
+Useful when combined with |g:ulti_color_Write_Fav|
+
 
 ------------------------------------------------------------------------------
 Configuration                           |Ultimate-Colorscheme-Utility-Config|
