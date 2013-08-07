@@ -19,6 +19,8 @@ Vim must have been compiled with the following features:
 
 Installation
 ============
+Vim-Ultimate-Colorscheme-Utility can also be found at [vim.org](http://www.vim.org/scripts/script.php?script_id=4679).
+*Note: This repository is deprecated in favor of github.*
 
 ### via Pathogen, the preferred method
 
@@ -29,13 +31,11 @@ git clone https://github.com/biskark/vim-ultimate-colorscheme-utility.git
 
 ### via archive, the bad method
 1. download archive
+   but this is outdated.
 2. unzip archive into .vim
 
-### via Vundle, the unknown method
-1. I don't use Vundle, but I assume it's similar to Pathogen
-
-Quick Usage
-===========
+Quick Usage Guide
+=================
 Note: All mappings are customizable, view the helptags for more information.
 
 ```vim
@@ -49,8 +49,3 @@ Note: All mappings are customizable, view the helptags for more information.
 <leader><leader>N    " Goes to previous colorscheme in all colors
 <leader><leader>q    " Views all favorites
 ```
-
-Todo
-====
-- [x] Add separate mapping to browse only the global favorites.
-- [x] Bugfix: Make sure all calls to g:color\_name are protected.
