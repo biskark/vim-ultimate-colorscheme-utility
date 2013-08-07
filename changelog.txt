@@ -1,0 +1,15 @@
+0.1.1 - Minor update
+August 7, 2013
+New Features:
+	Added two new keymappings to allow for the navigation of global
+	favorites regardless of setting for g:ulti_color_filetype. Handy when
+	settings preferences for a previously unset filetype.
+
+	Documentation updated and slightly reorganized
+
+Bug Fixes:
+    Fixed bug that occured when using g:colors_name after manually setting
+	background brightness.
+
+
+0.1.0 - Initial Version

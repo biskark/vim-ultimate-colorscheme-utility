@@ -3,7 +3,8 @@
 Author:             Kevin Biskar
 License:            MIT, see LICENSE for more info
 Website:            https://github.com/biskark/vim-ultimate-colorscheme-utility
-Version:            0.1.0
+Contact:            biskark@gmail.com
+Version:            0.1.1
 
 
 ==============================================================================
