@@ -19,9 +19,8 @@ Vim must have been compiled with the following features:
 
 Installation
 ============
-Vim-Ultimate-Colorscheme-Utility can also be found at [vim.org](http://www.vim.org/scripts/script.php?script_id=4679).
-
-*Note: This repository is deprecated in favor of github.*
+Vim-Ultimate-Colorscheme-Utility can also be found at [vim.org](http://www.vim.org/scripts/script.php?script_id=4679),
+but this should be avoided as github will always be more up to date.
 
 ### via Pathogen, the preferred method
 
