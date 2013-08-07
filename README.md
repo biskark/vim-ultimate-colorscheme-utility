@@ -20,6 +20,7 @@ Vim must have been compiled with the following features:
 Installation
 ============
 Vim-Ultimate-Colorscheme-Utility can also be found at [vim.org](http://www.vim.org/scripts/script.php?script_id=4679).
+
 *Note: This repository is deprecated in favor of github.*
 
 ### via Pathogen, the preferred method
@@ -36,7 +37,7 @@ git clone https://github.com/biskark/vim-ultimate-colorscheme-utility.git
 
 Quick Usage Guide
 =================
-Note: All mappings are customizable, view the helptags for more information.
+Note: This is not a complete list and all mappings are customizable, view the helptags for more information.
 
 ```vim
 <leader><leader>a    " Adds the current colorscheme to favorites
