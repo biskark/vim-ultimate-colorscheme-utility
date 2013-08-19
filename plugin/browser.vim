@@ -1,6 +1,6 @@
 " File: browser.vim
 " Author: Kevin Biskar
-" Version: 0.1.2
+" Version: 0.1.3
 "
 " Plugin that allows for easy browsing of different installed colorschemes.
 " Also allows for the global or filetype based favorites that enables 
@@ -201,6 +201,7 @@ function! s:CycleAll(step)
     endif
     " If it's STILL 0, you have a problem. Check your installed colorschemes.
     if len(s:all_colors) == 0
+        redraw
         echom 'Could not load any colorschemes.'
         return -1
     endif
@@ -216,9 +217,11 @@ function! s:CycleAll(step)
     try
         execute 'colorscheme '. s:all_colors[s:index]
         if g:ulti_color_verbose
+            redraw
             echo s:all_colors[s:index]
         endif
     catch /E185:/
+        redraw
         echom 'Invalid colorscheme ' . s:all_colors[s:index]
         return -1
     endtry
@@ -265,9 +268,11 @@ function! s:CycleFileFavorites(step, ...)
     try
         execute 'colorscheme ' . s:favorites[filetype][i + a:step]
         if g:ulti_color_verbose
+            redraw
             echo s:favorites[filetype][i + a:step]
         endif
     catch /E185:/
+        redraw
         echom 'Invalid colorscheme ' . s:favorites[filetype][i + a:step]
         return -1
     endtry
@@ -385,6 +390,7 @@ function! s:WriteFavorites()
     if !filewritable(s:data_file)
         let retval = writefile([], s:data_file)
         if retval != 0
+            redraw
             echom "Cannot write to file " . s:data_file . "."
             return retval
         endif
@@ -397,6 +403,7 @@ function! s:WriteFavorites()
         let retval = writefile(data, s:data_file)
         return retval
     else
+        redraw
         echom s:data_file . " either doesn't exist or cannot be written to."
         return -1
     endif
@@ -415,6 +422,7 @@ function! s:LoadFavorites()
         elseif filereadable(s:default_file)
             let file = s:default_file
         else
+            redraw
             echom "Cannot load favorites, config file not readable"
             return -1
         endif
@@ -485,9 +493,9 @@ function! s:RandomFavorite()
     try
         execute 'colorscheme '. s:favorites[ft][index]
         if g:ulti_color_verbose
+            redraw
             echo s:favorites[ft][index]
         endif
-        execute 'colorscheme '. s:favorites[ft][index]
     catch /E185:/
         echom 'Invalid colorscheme ' . s:favorites[ft][index]
         return -1
