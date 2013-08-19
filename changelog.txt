@@ -1,3 +1,9 @@
+0.1.2 - Minor update
+August 19, 2013
+Bug Fixes:
+	Fixed bug when manually saving or loading favorites list caused by a typo
+	in function name. Thanks to tflo for finding it.
+
 0.1.1 - Minor update
 August 7, 2013
 New Features:

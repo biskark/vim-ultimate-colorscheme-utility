@@ -1,6 +1,6 @@
 " File: browser.vim
 " Author: Kevin Biskar
-" Version: 0.1.1
+" Version: 0.1.2
 "
 " Plugin that allows for easy browsing of different installed colorschemes.
 " Also allows for the global or filetype based favorites that enables 
@@ -145,12 +145,12 @@ endif
 
 if exists('g:ulti_color_Write_Fav')
     exec 'nnoremap ' . g:ulti_color_Write_Fav . 
-                \ ' :call <SID>WriteFavorite()<cr>'
+                \ ' :call <SID>WriteFavorites()<cr>'
 endif
 
 if exists('g:ulti_color_Load_Fav')
     exec 'nnoremap ' . g:ulti_color_Load_Fav . 
-                \ ' :call <SID>LoadFavorite()<cr>'
+                \ ' :call <SID>LoadFavorites()<cr>'
 endif
 
 if exists('g:ulti_color_See_Fav')
