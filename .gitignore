@@ -1,5 +1,7 @@
 # Default Favorites Settings
 plugin/browser.csv
+plugin/font.csv
 doc/tags
+TODO.md
 *.py
 *.pl

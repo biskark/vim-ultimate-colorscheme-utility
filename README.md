@@ -4,18 +4,25 @@ vim-ultimate-colorscheme-utility
 Vim plugin that enables colorscheme browsing, choosing favorites, and automatic/manual scheme switching based on the current filetype.
 You no longer have to settle for one favorite scheme.
 
+New to Version 0.2.0!!!
+=======================
+Ultimate Colorscheme Utility now allows for the saving of favorite fonts! Several new key mappings have been added.
+
+Note that this __ONLY__ works when using GVim. Terminal vim cannot control the font settings.
+
 Features
 ========
 Ultimate Colorscheme Utility offers several features for customizing your colorscheme preferences.
 - Allows for easy browsing of all installed colorschemes, <br /> 
   see the awesome archive at https://github.com/flazz/vim-colorschemes for a ton of colorschemes.
-- Allows saving favorite colorschemes for all vim, or for specific filetypes.
-- Enables automatic switching of colorschemes when switching fietype buffers so that a favorite scheme is always on.
+- Allows saving favorite colorschemes and fonts for all files, or for specific filetypes.
+- Enables automatic switching of colorschemes and fonts when switching fietype buffers so that a favorite is always on.
 
 Required Vim Options
 ====================
 Vim must have been compiled with the following features:
 - modify\_fname
+- enable-gui (if you want to use favorite fonts)
 
 Installation
 ============
@@ -40,12 +47,20 @@ Note: This is not a complete list and all mappings are customizable, view the he
 
 ```vim
 <leader><leader>a    " Adds the current colorscheme to favorites
-<leader><leader>A    " Removes the current colorscheme to favorites
+<leader><leader>A    " Removes the current colorscheme from favorites
 <leader><leader>f    " Goes to next colorscheme in filetype specific favorites
 <leader><leader>F    " Goes to previous colorscheme in filetype specific favorites
 <leader><leader>g    " Goes to next colorscheme in global favorites
 <leader><leader>G    " Goes to previous colorscheme in global favorites
 <leader><leader>n    " Goes to next colorscheme in all colors
 <leader><leader>N    " Goes to previous colorscheme in all colors
+
+<leader><leader>t    " Adds the current font to favorites
+<leader><leader>T    " Removes the current font from favorites
+<leader><leader>e    " Goes to the next font in filetype specific favorites
+<leader><leader>E    " Goes to the previous font in filetype specific favorites
+<leader><leader>r    " Goes to the next font in global favorites
+<leader><leader>R    " Goes to the previous font in global favorites
+
 <leader><leader>q    " Views all favorites
 ```

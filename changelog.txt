@@ -1,3 +1,13 @@
+0.2.0 - New Feature, still in Beta
+September 3, 2013
+New Features:
+	Added a favorite fonts list. This will create a separate favorites list,
+	both filetype specific and global (just like with the colorschemes), that
+	will allow the user to save the current font as a favorite. So far I have
+	not included the ability to 'browse' the all fonts the way that you can
+	browse the included colorschemes. Note that this feature only works in
+	GVim, as terminal vim does not have control of the font settings.
+
 0.1.3 - Minor update
 August 19, 2013
 Bug Fixes:

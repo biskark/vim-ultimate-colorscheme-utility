@@ -4,7 +4,7 @@ Author:             Kevin Biskar
 License:            MIT, see LICENSE for more info
 Website:            https://github.com/biskark/vim-ultimate-colorscheme-utility
 Contact:            biskark@gmail.com
-Version:            0.1.3
+Version:            0.2.0
 
 
 ==============================================================================
@@ -26,6 +26,9 @@ installed colorschemes. However, |Ultimate-Colorscheme-Utility| also provides
 the ability to save favorite colorschemes. You can even have different
 favorites for different filetypes!
 
+Additionally, |Ultimate-Colorscheme-Utility| now can manage favorite fonts when
+using GVim.
+
 ==============================================================================
 2. Usage                                *Ultimate-Colorscheme-Utility-Usage* 
 By default |Ultimate-Colorscheme-Utility| performs the following actions
@@ -44,6 +47,14 @@ automatically (See ||Ultimate-Colorscheme-Utility-Settings|| for more info):
            well as a filetype specific list, and for browsing only those
            colorschemes already saved. See |Ultimate-Colorscheme-Utility-Mappings|
            for more info.
+        4. If |Ultimate-Colorscheme-Utility| detects that GVim is running, it
+           will also load your favorite fonts, or load the default file if none
+           are found.
+        5. If |Ultimate-Colorscheme-Utility| detects that GVim is running, it
+           will then add key mappings for adding and removing favorite fonts,
+           cycling through filetype specific fonts, or cycling through
+           global fonts. Note that |Ultimate-Colorscheme-Utility| does not
+           currently allow for browsing of all available fonts.
 
     On BufEnter:
         |Ultimate-Colorscheme-Utility| detects whether the current
@@ -55,11 +66,17 @@ automatically (See ||Ultimate-Colorscheme-Utility-Settings|| for more info):
         performs a similar action. If |Ultimate-Colorscheme-Utility| detects no
         favorites, no action is taken and the colorscheme should be whatever
         it would be by default.
+        This same behavior is taken if you are running GVim and have specified
+        saving of font favorites.
 
     On Vim Exit:
         |Ultimate-Colorscheme-Utility| saves the current favorites to
         |&rtp/vim-ultimate-colorscheme-utility/plugin/browser.csv| so you
         never have to worry about manaually saving or loading any of these.
+        If you are running GVim and are allowing the saving of favorite fonts,
+        |&rtp/vim-ultimate-colorscheme-utility/plugin/font.csv| will be used
+        for font specific favorites.
+
 
 ==============================================================================
 3. Settings                             *Ultimate-Colorscheme-Utility-Settings* 
@@ -161,6 +178,70 @@ and see which ones look good.
 g:ulti_color_See_Fav~
 Default: '<leader><leader>q'
 
+Mapping that echoes to the screen a list of all your saved favorites organized
+by filetype.
+
+
+                                                *g:ulti_color_Font_Next_Fav*
+g:ulti_color_Font_Next_Fav~
+Default: '<leader><leader>e'
+
+Mapping that sets the font to the next font in the favorites
+list. If the current filetype has no favorites, uses the global list.
+
+
+                                                *g:ulti_color_Font_Prev_Fav*
+g:ulti_color_Font_Prev_Fav~
+Default: '<leader><leader>E'
+
+Mapping that sets the font to the previous font in the favorites
+list. If the current filetype has no favorites, uses the global list.
+
+
+                                                *g:ulti_color_Font_Next_Global_Fav*
+g:ulti_color_Font_Next_Global_Fav~
+Default: '<leader><leader>r'
+
+Mapping that sets the font to the next font in the global
+favorites list, regardless of the current filetype.
+Useful if g:ulti_color_filetype is 1 but you still don't want to worry about
+the filetype. For example, if you start setting up favorites for a new
+filetype and want to conveniently browse through the current global favorites
+and see which ones look good.
+
+
+                                                *g:ulti_color_Font_Prev_Global_Fav*
+g:ulti_color_Font_Prev_Global_Fav~
+Default: '<leader><leader>R'
+
+Mapping that sets the font to the previous font in the global
+favorites list, regardless of the current filetype.
+Useful if g:ulti_color_filetype is 1 but you still don't want to worry about
+the filetype. For example, if you start setting up favorites for a new
+filetype and want to conveniently browse through the current global favorites
+and see which ones look good.
+
+
+                                                *g:ulti_color_Font_Add_Fav*
+g:ulti_color_Font_Add_Fav~
+Default: '<leader><leader>t'
+
+Mapping to add current font to favorite list.
+If |g:ulti_color_filetype| is set to 1, adds to a filetype specific list.
+If |g:ulti_color_quick_add| is set to 1 as well, also adds to a global list.
+If the current font is already in the filetype specific list, it's
+added to the global list regardless of settings.
+
+
+                                                *g:ulti_color_Font_Remove_Fav*
+g:ulti_color_Font_Remove_Fav~
+Default: '<leader><leader>T'
+
+Mapping to remove current font from favorite list.
+First checks if it's in a filetype specific list.
+If |g:ulti_color_quick_remove| is set to 1, also removes from the global list.
+If the current font is not in the filetype specific list, it's
+removed from the global list regardless of settings.
 
 
                                                 *g:ulti_color_Write_Fav*
@@ -245,7 +326,7 @@ must load these automatically with the |g:ulti_color_Load_Fav| mapping.
 g:ulti_color_quick_add~
 Default: 1
 
-Upon adding a colorscheme to favorites, if this is 1, the scheme will be saved
+Upon adding a colorscheme or font to favorites, if this is 1, the scheme will be saved
 to the global favorites list as well as the filetype favorites list. If this
 is 0, the scheme will only be added to the global favorites if it's already in
 the favorites list for the current filetype.
@@ -257,12 +338,26 @@ This setting is irrelevant if |g:ulti_color_filetype| is set to 0.
 g:ulti_color_quick_remove~
 Default: 0
 
-Upon removing a colorscheme to favorites, if this is 1, the scheme will be
+Upon removing a colorscheme or font from favorites, if this is 1, the scheme will be
 removed from the global favorites list as well as the filetype favorites list.
 If this is 0, the scheme will only be removed from the global favorites if
 it's not in the favorites list for the current filetype.
 Note:
 This setting is irrelevant if |g:ulti_color_filetype| is set to 0.
+
+
+                                                   *g:ulti_color_font_enable*
+g:ulti_color_font_enable~
+Default: 1
+
+If set to 1, |Ultimate-Colorscheme-Utility| will allow the setting of font
+favorites in addition to colorscheme favorites. When set, this will add six
+key mappings that allow for adding/deleting favorites and for browsing global
+and filetype specific fonts.
+Note:
+This only matters when using GVim. Terminal vim does not control the font
+settings, the terminal does, so if GVim isn't detected, no mappings are
+created regardless of this setting.
 
 
                                                    *g:ulti_color_verbose*
@@ -281,11 +376,12 @@ g:ulti_color_always_random~
 Default: 0
 
 Normally, upon BufEnter |Ultimate-Colorscheme-Utility| will only change the
-colorscheme if the newly entered buffer doesn't have the current colorscheme
-in its list of favorites. However, if this is set to 1,
+colorscheme or font if the newly entered buffer doesn't have the current
+colorscheme or font in its list of favorites. However, if this is set to 1,
 |Ultimate-Colorscheme-Utility| will randomly choose a favorite upon every
 BufEnter regardless of filetype, resulting in a possibly nauseating change of
-colors if you have several favorite colors. Use at your own risk!
+colors if you have several favorites and frequently switch between buffers.
+Use at your own risk!
 
 ==============================================================================
 /* vim: set ft=help: */

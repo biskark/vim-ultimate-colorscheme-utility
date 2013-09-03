@@ -1,6 +1,6 @@
 " File: browser.vim
 " Author: Kevin Biskar
-" Version: 0.1.3
+" Version: 0.2.0
 "
 " Plugin that allows for easy browsing of different installed colorschemes.
 " Also allows for the global or filetype based favorites that enables 
@@ -52,20 +52,26 @@ if !exists('g:ulti_color_verbose')
     let g:ulti_color_verbose = 1
 endif
 
-" Removes favorite colorscheme from 'global' favorites in addition to
+" Removes favorite colorscheme or font from 'global' favorites in addition to
 " filetype favorites.
 if !exists('g:ulti_color_quick_remove')
     let g:ulti_color_quick_remove = 0
 endif
 
-" Chooses a random favorite colorscheme on each buf enter.
+" Chooses a random favorite colorscheme (and font) on each buf enter.
 if !exists('g:ulti_color_always_random')
     let g:ulti_color_always_random = 0
+endif
+
+" Enable the font favorites feature.
+if !exists('g:ulti_color_font_enable')
+    let g:ulti_color_font_enable = 1
 endif
 " END Global Variables }}}
 
 " Default Key Mappings {{{
 if g:ulti_color_default_keys
+    " Colorscheme favorite settings
     if !exists('g:ulti_color_Next_Global')
         let g:ulti_color_Next_Global = '<leader><leader>n'
     endif
@@ -90,6 +96,7 @@ if g:ulti_color_default_keys
     if !exists('g:ulti_color_Remove_Fav')
         let g:ulti_color_Remove_Fav = '<leader><leader>A'
     endif
+    " Plugin utility settings
     if !exists('g:ulti_color_Write_Fav')
         let g:ulti_color_Write_Fav = '<leader><leader>s'
     endif
@@ -99,10 +106,30 @@ if g:ulti_color_default_keys
     if !exists('g:ulti_color_See_Fav')
         let g:ulti_color_See_Fav = '<leader><leader>q'
     endif
+    " Font favorite settings
+    if !exists('g:ulti_color_Font_Next_Fav')
+        let g:ulti_color_Font_Next_Fav = '<leader><leader>e'
+    endif
+    if !exists('g:ulti_color_Font_Prev_Fav')
+        let g:ulti_color_Font_Prev_Fav = '<leader><leader>E'
+    endif
+    if !exists('g:ulti_color_Font_Next_Global_Fav')
+        let g:ulti_color_Font_Next_Global_Fav = '<leader><leader>r'
+    endif
+    if !exists('g:ulti_color_Font_Prev_Global_Fav')
+        let g:ulti_color_Font_Prev_Global_Fav = '<leader><leader>R'
+    endif
+    if !exists('g:ulti_color_Font_Add_Fav')
+        let g:ulti_color_Font_Add_Fav = '<leader><leader>t'
+    endif
+    if !exists('g:ulti_color_Font_Remove_Fav')
+        let g:ulti_color_Font_Remove_Fav = '<leader><leader>T'
+    endif
 endif
 " END Default Key Mappings }}}
 
 " Assign Mappings to Functions {{{
+" Colorscheme Mappings
 if exists('g:ulti_color_Next_Global')
     exec 'nnoremap ' . g:ulti_color_Next_Global .
                 \ ' :call <SID>CycleAll(1)<cr>'
@@ -143,6 +170,7 @@ if exists('g:ulti_color_Remove_Fav')
                 \ ' :call <SID>RemoveFavorite()<cr>'
 endif
 
+" Utility mappings
 if exists('g:ulti_color_Write_Fav')
     exec 'nnoremap ' . g:ulti_color_Write_Fav . 
                 \ ' :call <SID>WriteFavorites()<cr>'
@@ -157,14 +185,49 @@ if exists('g:ulti_color_See_Fav')
     exec 'nnoremap ' . g:ulti_color_See_Fav . 
                 \ ' :call <SID>SeeFavorites()<cr>'
 endif
+
+" Font mappings
+if exists('g:ulti_color_Font_Add_Fav')
+    exec 'nnoremap ' . g:ulti_color_Font_Add_Fav .
+                \ ' :call <SID>AddFontFavorite()<cr>'
+endif
+
+if exists('g:ulti_color_Font_Remove_Fav')
+    exec 'nnoremap ' . g:ulti_color_Font_Remove_Fav .
+                \ ' :call <SID>RemoveFontFavorite()<cr>'
+endif
+
+if exists('g:ulti_color_Font_Next_Fav')
+    exec 'nnoremap ' . g:ulti_color_Font_Next_Fav . 
+                \ ' :call <SID>CycleFontFileFavorites(1)<cr>'
+endif
+
+if exists('g:ulti_color_Font_Prev_Fav')
+    exec 'nnoremap ' . g:ulti_color_Font_Prev_Fav . 
+                \ ' :call <SID>CycleFontFileFavorites(-1)<cr>'
+endif
+
+if exists('g:ulti_color_Font_Next_Global_Fav')
+    exec 'nnoremap ' . g:ulti_color_Font_Next_Global_Fav . 
+                \ ' :call <SID>CycleFontGlobalFavorites(1)<cr>'
+endif
+
+if exists('g:ulti_color_Font_Prev_Global_Fav')
+    exec 'nnoremap ' . g:ulti_color_Font_Prev_Global_Fav . 
+                \ ' :call <SID>CycleFontGlobalFavorites(-1)<cr>'
+endif
+
 " END Assign Functions }}}
 
 " Script Variables {{{
 let s:index = -1
 let s:all_colors = []
 let s:favorites = {}
+let s:font_favorites = {}
 let s:data_loaded = 0
+let s:font_data_loaded = 0
 let s:data_file = expand('<sfile>:p:r') . '.csv'
+let s:font_data_file = expand('<sfile>:p:h') . '/font.csv'
 let s:default_file = expand('<sfile>:p:h') . '/default.csv'
 " END script variables }}}
 
@@ -280,12 +343,12 @@ function! s:CycleFileFavorites(step, ...)
 endfunction
 " END CycleFileFavorites }}}
 
-" s:CycleGlobalFavorites {{{
+" s:CycleGlobalFavorites() {{{
 " Steps through the global favorites list.
 function! s:CycleGlobalFavorites(step)
     call <SID>CycleFileFavorites(a:step, 1)
 endfunction
-" END CycleGlobalFavorites }}}
+" END CycleGlobalFavorites() }}}
 
 " s:AddFavorite() {{{
 " Add a color to the favorites list, if no color given. Doesn't add duplicates.
@@ -373,12 +436,22 @@ endfunction
 " s:SeeFavorites() {{{
 " Function that lists currently stored favorites.
 function! s:SeeFavorites()
+    echo "Colorscheme Favorites:"
     for language in keys(s:favorites)
         echo language
         for scheme in s:favorites[language]
             echo "  " . scheme
         endfor
     endfor
+    if has('gui_running') && g:ulti_color_font_enable
+        echo "\nFont Favorites:"
+        for language in keys(s:font_favorites)
+            echo language
+            for font in s:font_favorites[language]
+                echo " " . font
+            endfor
+        endfor
+    endif
 endfunction
 " END SeeFavorites }}}
 
@@ -453,7 +526,7 @@ function! s:InFavorites()
 endfunction
 " END InFavorites }}}
 
-" s:SetFavorite {{{
+" s:SetFavorite() {{{
 " Function that detects filetype and sets the colorscheme to a preferred color
 " for that filetype. On startup, g:colors_name may not be set, so checks for
 " that to.
@@ -474,7 +547,7 @@ function! s:SetFavorite()
 endfunction
 " END SetFavorite }}}
 
-" s:RandomFavorite {{{
+" s:RandomFavorite() {{{
 " Function that randomnly chooses a favorite for the selected filetype or
 " chooses a random global if no normal filetype exists. If no global favorites
 " set, returns -1.
@@ -503,6 +576,231 @@ function! s:RandomFavorite()
     return 0
 endfunction
 " END RandomFavorite }}}
+
+" s:LoadFontFavorites() {{{
+" Function that reads font favorites from plugin directory.
+" If no favorites found, loads a default file.
+" If default not found, complains and returns -1.
+function! s:LoadFontFavorites()
+    if !s:font_data_loaded
+        let file = ''
+        if filereadable(s:font_data_file)
+            let file = s:font_data_file
+        elseif filereadable(s:default_file)
+            let file = s:default_file
+        else
+            redraw
+            echom "Cannot load font favorites, config file not readable"
+            return -1
+        endif
+
+        let s:font_data_loaded = 1
+        for line in readfile(file)
+            let type = split(line, ',')[0]
+            let prefs = split(line, ',')[1:]
+            if !has_key(s:font_favorites, type)
+                let s:font_favorites[type] = []
+            endif
+            let s:font_favorites[type] += prefs
+        endfor
+    endif
+endfunction
+" END LoadFontFavorites }}}
+
+" s:WriteFontFavorites() {{{
+" Writes the stored font favorites to the customizable data_file.
+" If the function can't write to the file, returns -1.
+function! s:WriteFontFavorites()
+    let retval = 0
+    if !filewritable(s:font_data_file)
+        let retval = writefile([], s:font_data_file)
+        if retval != 0
+            redraw
+            echom "Cannot write to file " . s:font_data_file . "."
+            return retval
+        endif
+    endif
+    if filewritable(s:font_data_file)
+        let data = []
+        for type in keys(s:font_favorites)
+            call add(data, type . ',' . join(s:font_favorites[type], ','))
+        endfor
+        let retval = writefile(data, s:font_data_file)
+        return retval
+    else
+        redraw
+        echom s:font_data_file . " either doesn't exist or cannot be written to."
+        return -1
+    endif
+endfunction
+" END WriteFontFavorites }}}
+
+" s:SetFontFavorite() {{{
+" Function that detects filetype and sets the font to a preferred font
+" for that filetype.
+function! s:SetFontFavorite()
+    let ft = &filetype
+    if (has_key(s:font_favorites, ft) && 
+                \ index(s:font_favorites[ft], &guifont) == -1 &&
+                \ len(s:font_favorites[ft]) > 0)
+        call <SID>RandomFontFavorite()
+    elseif has_key(s:font_favorites, 'global') && 
+                \ index(s:font_favorites['global'], &guifont) == -1 &&
+                \ len(s:font_favorites['global']) > 0
+        call <SID>RandomFontFavorite()
+    endif
+endfunction
+" END SetFavorite }}}
+
+" s:RandomFontFavorite() {{{
+" Function that randomnly chooses a favorite font for the selected filetype or
+" chooses a random global if no normal filetype exists. If no global favorites
+" set, returns -1.
+function! s:RandomFontFavorite()
+    let ft = &filetype
+    if g:ulti_color_filetype == 0 || has_key(s:font_favorites, ft) == 0 ||
+                \ len(s:font_favorites[ft]) == 0
+        if len(s:font_favorites['global']) == 0
+            return -1
+        endif
+        let ft = 'global'
+    endif
+    let limit = len(s:font_favorites[ft])
+    let index = str2nr(matchstr(reltimestr(reltime()), '\v\.@<=\d+')[1:]) 
+                \ % limit
+    execute 'let &guifont = ' . "'" . s:font_favorites[ft][index] . "'"
+    if g:ulti_color_verbose
+        redraw
+        echo s:font_favorites[ft][index]
+    endif
+    return 0
+endfunction
+" END RandomFavorite }}}
+
+" s:AddFontFavorite() {{{
+" Add current font to the favorites list. Doesn't add duplicates.
+" If filetype is set, adds to current filetype. Else, adds only to global.
+" If g:ulti_color_quick_add is set, also adds font to 'global' favorites.
+" If g:ulti_color_quick_add is not set, only adds to 'global' if the
+" font is already in the filetype favorites.
+function! s:AddFontFavorite()
+    let name = &guifont
+    if g:ulti_color_filetype
+        " Adds to filetype favorites
+        let ft = &filetype
+        if ft !=# ''
+            if !has_key(s:font_favorites, ft)
+                let s:font_favorites[ft] = []
+            endif
+            if index(s:font_favorites[ft], name) == -1
+                call add(s:font_favorites[ft], name)
+                if g:ulti_color_verbose
+                    echo "'" . name . "' added to " . ft . " favorites."
+                endif
+                if g:ulti_color_quick_add == 0
+                    return 0
+                endif
+            elseif g:ulti_color_verbose
+                echo "'" . name . "' already in " . ft . " favorites."
+            endif
+        endif
+    endif
+
+    if !has_key(s:font_favorites, 'global')
+        let s:font_favorites['global'] = []
+    endif
+    if index(s:font_favorites['global'], name) == -1
+        call add(s:font_favorites['global'], name)
+        if g:ulti_color_verbose
+            echo "'" . name . "' added to global favorites."
+        endif
+    elseif g:ulti_color_verbose
+        echo "'" . name . "' already in global favorites."
+    endif
+    return 0
+endfunction
+" END AddFontFavorite }}}
+
+" s:RemoveFontFavorite() {{{
+" Removes a the current scheme from the favorites list from the given filetype.
+" If g:ulti_color_quick_remove is set, will also remove from global favorites.
+" If g:ulti_color_quick_remove is not set, will only remove from global
+" favorites if it is not currently in the filetype favorites.
+function! s:RemoveFontFavorite()
+    let name = &guifont
+    let ft = &filetype
+    if has_key(s:font_favorites, ft) && index(s:font_favorites[ft], name) != -1
+        unlet s:font_favorites[ft][index(s:font_favorites[ft], name)]
+        if g:ulti_color_verbose
+            echo "'" . name . "' removed from " . ft . " favorites."
+        endif
+        if g:ulti_color_quick_remove == 0
+            return 0
+        endif
+    elseif g:ulti_color_verbose
+        echo "'" . name . "' wasn't in " . ft . " favorites."
+    endif
+    if has_key(s:font_favorites, 'global') &&
+                \ index(s:font_favorites['global'], name) != -1
+        unlet s:font_favorites['global'][index(s:font_favorites['global'], name)]
+        if g:ulti_color_verbose
+            echo "'" . name . "' removed from global favorites."
+        endif
+    elseif g:ulti_color_verbose
+        echo "'" . name . "' wasn't in global favorites."
+    endif
+    return 0
+endfunction
+" END RemoveFontFavorite }}}
+
+" s:CycleFontFileFavorites() {{{
+" Steps one by one through font favorites. Checks if the current filetype has
+" it's own favorites list and uses that. If filetype doesn't have favorites,
+" cycles through global favorites instead. Returns 0 if no problem or -1 if
+" no favorites are set.
+" If the second argument is set to 1, defaults to global list.
+function! s:CycleFontFileFavorites(step, ...)
+    if a:step != 1 && a:step != -1
+        return -1
+    endif
+
+    " Set filetype to current or global
+    let filetype = &filetype
+    " If filetype explicitly ignored
+    if g:ulti_color_filetype == 0 || (a:0 == 1 && a:1 == 1)
+        let filetype = 'global'
+    " If no favorites for filetype
+    elseif !has_key(s:font_favorites, filetype) || len(s:font_favorites[filetype]) == 0
+        let filetype = 'global'
+    endif
+
+    " Return early if no favorites set
+    if len(s:font_favorites[filetype]) == 0
+        return -1
+    endif
+
+    let i = index(s:font_favorites[filetype], &guifont)
+    " Check if last item and set it to index -1
+    if i == len(s:font_favorites[filetype]) - 1 && a:step == 1
+        let i = -1
+    elseif i == 0 && a:step == -1
+        let i = len(s:font_favorites[filetype])
+    endif
+    execute 'let &guifont = ' . "'" . s:font_favorites[filetype][i + a:step] . "'"
+    if g:ulti_color_verbose
+        redraw
+        echo s:font_favorites[filetype][i + a:step]
+    endif
+    return 0
+endfunction
+" END CycleFontFileFavorites }}}
+
+" s:CycleFontGlobalFavorites() {{{
+" Steps through the global favorites list.
+function! s:CycleFontGlobalFavorites(step)
+    call <SID>CycleFontFileFavorites(a:step, 1)
+endfunction
+" END CycleFontGlobalFavorites() }}}
 " END Script Functions }}}
 
 " Auto Commands {{{
@@ -510,6 +808,9 @@ endfunction
 call <SID>GetAllColors()
 if g:ulti_color_auto_load
     call <SID>LoadFavorites()
+    if has('gui_running') && g:ulti_color_font_enable
+        call <SID>LoadFontFavorites()
+    endif
 endif
 " END Automatic calls }}}
 
@@ -518,6 +819,9 @@ augroup UltiVimColor
     autocmd!
     if g:ulti_color_auto_save
         autocmd BufWinLeave * :call <SID>WriteFavorites()
+        if has('gui_running') && g:ulti_color_font_enable
+            autocmd BufWinLeave * :call <SID>WriteFontFavorites()
+        endif
     endif
 augroup END
 " END Automatic called on quit }}}
@@ -528,8 +832,14 @@ augroup UltiVimAutoScheme
     autocmd!
     if g:ulti_color_always_random
         autocmd BufEnter * call <SID>RandomFavorite()
+        if has('gui_running') && g:ulti_color_font_enable
+            autocmd BufEnter * call <SID>RandomFontFavorite()
+        endif
     else
         autocmd BufEnter * call <SID>SetFavorite()
+        if has('gui_running') && g:ulti_color_font_enable
+            autocmd BufEnter * call <SID>SetFontFavorite()
+        endif
     endif
 augroup END
 " END Automatic called on buffer enter }}}
