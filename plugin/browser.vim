@@ -1,6 +1,6 @@
 " File: browser.vim
 " Author: Kevin Biskar
-" Version: 0.2.0
+" Version: 0.2.0a
 "
 " Plugin that allows for easy browsing of different installed colorschemes.
 " Also allows for the global or filetype based favorites that enables 
@@ -262,7 +262,7 @@ function! s:CycleAll(step)
     endif
 
     if len(s:all_colors) == 0
-        call <SID>GetAllColors()'
+        call <SID>GetAllColors()
     endif
     " If it's STILL 0, you have a problem. Check your installed colorschemes.
     if len(s:all_colors) == 0
