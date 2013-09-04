@@ -53,8 +53,10 @@ automatically (See ||Ultimate-Colorscheme-Utility-Settings|| for more info):
         5. If |Ultimate-Colorscheme-Utility| detects that GVim is running, it
            will then add key mappings for adding and removing favorite fonts,
            cycling through filetype specific fonts, or cycling through
-           global fonts. Note that |Ultimate-Colorscheme-Utility| does not
-           currently allow for browsing of all available fonts.
+           global fonts. Additionally, a new menu will be added to GVim that
+           allows users to use all of |Ultimate-Colorscheme-Utility| without
+           using the keymappings. Note that |Ultimate-Colorscheme-Utility| does
+           not currently allow for browsing of all available fonts.
 
     On BufEnter:
         |Ultimate-Colorscheme-Utility| detects whether the current
@@ -292,6 +294,18 @@ sets key mappings. If set to 0, any key mappings you don't define in your
 vimrc file will not be available to you at all. If set to 1, no worries, your
 personal key mappings will trump any defaults, and only those key mappings you
 don't specify will get the defaults.
+
+
+                                                   *g:ulti_color_gui_menu*
+g:ulti_color_gui_menu~
+Default: 1
+
+This setting controls whether |Ultimate-Colorscheme-Utility| automatically
+creates an additional menu when running a gui vim instance. When set to 1,
+|Ultimate-Colorscheme-Utility| automatically makes a menu titled 'Favorites'
+that is tailored to your other configuration choices. For example, if you did
+not want filetype specific favorites, or you don't want to worry about
+favorite fonts, the Favorites menu will not show those options.
 
 
                                                    *g:ulti_color_filetype*

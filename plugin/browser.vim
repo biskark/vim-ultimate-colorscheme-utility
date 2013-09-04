@@ -1,6 +1,6 @@
 " File: browser.vim
 " Author: Kevin Biskar
-" Version: 0.2.0a
+" Version: 0.2.1
 "
 " Plugin that allows for easy browsing of different installed colorschemes.
 " Also allows for the global or filetype based favorites that enables 
@@ -66,6 +66,11 @@ endif
 " Enable the font favorites feature.
 if !exists('g:ulti_color_font_enable')
     let g:ulti_color_font_enable = 1
+endif
+
+" Enable modifying the GVim menus.
+if !exists('g:ulti_color_gui_menu')
+    let g:ulti_color_gui_menu = 1
 endif
 " END Global Variables }}}
 
@@ -803,6 +808,44 @@ function! s:CycleFontGlobalFavorites(step)
     call <SID>CycleFontFileFavorites(a:step, 1)
 endfunction
 " END CycleFontGlobalFavorites() }}}
+
+" s:MakeGuiMenu() {{{
+function! s:MakeGuiMenu()
+    :anoremenu Favorites.Browse\ Colorschemes.Next :call <SID>CycleAll(1)<CR>
+    :anoremenu Favorites.Browse\ Colorschemes.Previous :call <SID>CycleAll(-1)<CR>
+
+    if g:ulti_color_filetype
+        :anoremenu Favorites.Favorite\ Colorschemes.Next\ Filetype-Specific :call <SID>CycleFileFavorites(1)<CR>
+        :anoremenu Favorites.Favorite\ Colorschemes.Previous\ Filetype-Specific :call <SID>CycleFileFavorites(-1)<CR>
+    endif
+    :anoremenu Favorites.Favorite\ Colorschemes.Next\ Global :call <SID>CycleGlobalFavorites(1)<CR>
+    :anoremenu Favorites.Favorite\ Colorschemes.Previous\ Global :call <SID>CycleGlobalFavorites(-1)<CR>
+    :menu Favorites.Favorite\ Colorschemes.-Colorscheme- :
+    :anoremenu Favorites.Favorite\ Colorschemes.Add\ to\ Favorites :call <SID>AddFavorite()<CR>
+    :anoremenu Favorites.Favorite\ Colorschemes.Remove\ from\ Favorites :call <SID>RemoveFavorite()<CR>
+
+    if g:ulti_color_font_enable
+        if g:ulti_color_filetype
+            :anoremenu Favorites.Favorite\ Fonts.Next\ Filetype-Specific :call <SID>CycleFontFileFavorites(1)<CR>
+            :anoremenu Favorites.Favorite\ Fonts.Previous\ Filetype-Specific :call <SID>CycleFontFileFavorites(-1)<CR>
+        endif
+        :anoremenu Favorites.Favorite\ Fonts.Next\ Global :call <SID>CycleFontGlobalFavorites(1)<CR>
+        :anoremenu Favorites.Favorite\ Fonts.Previous\ Global :call <SID>CycleFontGlobalFavorites(-1)<CR>
+        :menu Favorites.Favorite\ Fonts.-Font- :
+        :anoremenu Favorites.Favorite\ Fonts.Add\ Font\ to\ Favorites :call <SID>AddFontFavorite()<CR>
+        :anoremenu Favorites.Favorite\ Fonts.Remove\ Font\ from\ Favorites :call <SID>RemoveFontFavorite()<CR>
+    endif
+
+    :anoremenu Favorites.Manual\ Save/Load.Load\ Colorscheme\ Favorites<Tab>(done automatically) :call <SID>LoadFavorites()<CR>
+    :anoremenu Favorites.Manual\ Save/Load.Save\ Colorscheme\ Favorites<Tab>(done automatically) :call <SID>WriteFavorites()<CR>
+    :anoremenu Favorites.Manual\ Save/Load.Load\ Font\ Favorites<Tab>(done automatically) :call <SID>LoadFontFavorites()<CR>
+    :anoremenu Favorites.Manual\ Save/Load.Save\ Font\ Favorites<Tab>(done automatically) :call <SID>WriteFontFavorites()<CR>
+    :menu Favorites.-Read/Write- :
+
+    :anoremenu Favorites.See\ Favorites :call <SID>SeeFavorites()<CR>
+endfunction
+
+" END MakeGuiMenu }}}
 " END Script Functions }}}
 
 " Auto Commands {{{
@@ -810,8 +853,13 @@ endfunction
 call <SID>GetAllColors()
 if g:ulti_color_auto_load
     call <SID>LoadFavorites()
-    if has('gui_running') && g:ulti_color_font_enable
-        call <SID>LoadFontFavorites()
+    if has('gui_running')
+        if g:ulti_color_font_enable
+            call <SID>LoadFontFavorites()
+        endif
+        if g:ulti_color_gui_menu
+            call <SID>MakeGuiMenu()
+        endif
     endif
 endif
 " END Automatic calls }}}
