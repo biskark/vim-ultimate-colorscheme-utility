@@ -1,14 +1,15 @@
 vim-ultimate-colorscheme-utility
 ================================
 
-Vim plugin that enables colorscheme browsing, choosing favorites, and automatic/manual scheme switching based on the current filetype.
-You no longer have to settle for one favorite scheme.
+Vim plugin that enables colorscheme and font browsing, choosing favorites, and
+automatic/manual scheme switching based on the current filetype. You no longer
+have to settle for one favorite scheme or guifont.
 
-New to Version 0.2.0!!!
+Menu Integration Branch
 =======================
-Ultimate Colorscheme Utility now allows for the saving of favorite fonts! Several new key mappings have been added.
-
-Note that this __ONLY__ works when using GVim. Terminal vim cannot control the font settings.
+Ultimate Colorscheme Utility is now working on better integration into GVim.
+There is now a 'Favorites' menu that enables all the functionality of the
+plugin at the push of a button.
 
 Features
 ========
@@ -34,6 +35,7 @@ but this should be avoided as github will always be more up to date.
 ```bash
 cd ~/.vim/bundle
 git clone https://github.com/biskark/vim-ultimate-colorscheme-utility.git
+git checkout menu_integration
 ```
 
 ### via archive, the bad method
