@@ -1,3 +1,9 @@
+0.2.0a - Bugfix
+September 3, 2013
+Bug Fixes:
+	Fixed bug that failed to turn off new font keymappings when not running
+	GVim.
+
 0.2.0 - New Feature, still in Beta
 September 3, 2013
 New Features:
