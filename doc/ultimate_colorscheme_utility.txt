@@ -4,7 +4,7 @@ Author:             Kevin Biskar
 License:            MIT, see LICENSE for more info
 Website:            https://github.com/biskark/vim-ultimate-colorscheme-utility
 Contact:            biskark@gmail.com
-Version:            0.2.1
+Version:            0.2.2
 
 
 ==============================================================================

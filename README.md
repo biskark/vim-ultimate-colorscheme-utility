@@ -1,34 +1,41 @@
-vim-ultimate-colorscheme-utility
-================================
+Vim Ultimate Colorscheme Utility, version 0.2.1
+=======================================
 
 Vim plugin that enables colorscheme and font browsing, choosing favorites, and
 automatic/manual scheme switching based on the current filetype. You no longer
 have to settle for one favorite scheme or guifont.
 
-Menu Integration Branch
-=======================
+New Feature
+===========
+####Menu Integration
+
 Ultimate Colorscheme Utility is now working on better integration into GVim.
 There is now a 'Favorites' menu that enables all the functionality of the
 plugin at the push of a button.
 
 Features
 ========
-Ultimate Colorscheme Utility offers several features for customizing your colorscheme preferences.
-- Allows for easy browsing of all installed colorschemes, <br /> 
-  see the awesome archive at https://github.com/flazz/vim-colorschemes for a ton of colorschemes.
-- Allows saving favorite colorschemes and fonts for all files, or for specific filetypes.
-- Enables automatic switching of colorschemes and fonts when switching fietype buffers so that a favorite is always on.
+Ultimate Colorscheme Utility offers several features for customizing your
+colorscheme preferences.
+- Allows for easy browsing of all installed colorschemes. See the awesome
+  archive at https://github.com/flazz/vim-colorschemes for a ton of
+  colorschemes.
+- Allows saving favorite colorschemes and fonts for all files, or for specific
+  filetypes.
+- Enables automatic switching of colorschemes and fonts when switching filetype
+  buffers so that a favorite is always on.
 
 Required Vim Options
 ====================
 Vim must have been compiled with the following features:
 - modify\_fname
-- enable-gui (if you want to use favorite fonts)
+- enable-gui (if you want to save your favorite fonts)
 
 Installation
 ============
-Vim-Ultimate-Colorscheme-Utility can also be found at [vim.org](http://www.vim.org/scripts/script.php?script_id=4679),
-but this should be avoided as github will always be more up to date.
+Vim-Ultimate-Colorscheme-Utility can also be found at
+[vim.org](http://www.vim.org/scripts/script.php?script_id=4679), but this
+should be avoided as github will always be more up to date.
 
 ### via Pathogen, the preferred method
 
@@ -45,7 +52,8 @@ git checkout menu_integration
 
 Quick Usage Guide
 =================
-Note: This is not a complete list and all mappings are customizable, view the helptags for more information.
+Note: This is not a complete list and all mappings are customizable, view the
+helptags for more information.
 
 ```vim
 <leader><leader>a    " Adds the current colorscheme to favorites

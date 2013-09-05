@@ -1,6 +1,6 @@
 " File: browser.vim
 " Author: Kevin Biskar
-" Version: 0.2.1
+" Version: 0.2.2
 "
 " Plugin that allows for easy browsing of different installed colorschemes.
 " Also allows for the global or filetype based favorites that enables 
@@ -71,6 +71,10 @@ endif
 " Enable modifying the GVim menus.
 if !exists('g:ulti_color_gui_menu')
     let g:ulti_color_gui_menu = 1
+endif
+
+if !exists('g:ulti_color_excluded')
+    let g:ulti_color_excluded = []
 endif
 " END Global Variables }}}
 
@@ -316,6 +320,9 @@ function! s:CycleFileFavorites(step, ...)
     " If filetype explicitly ignored
     if g:ulti_color_filetype == 0 || (a:0 == 1 && a:1 == 1)
         let filetype = 'global'
+    " Filetype in excluded
+    elseif index(g:ulti_color_excluded, filetype) != -1
+        let filetype = 'global'
     " If no favorites for filetype
     elseif !has_key(s:favorites, filetype) || len(s:favorites[filetype]) == 0
         let filetype = 'global'
@@ -370,10 +377,11 @@ function! s:AddFavorite()
         return -1
     endif
     let name = g:colors_name
+    " Adds to filetype favorites
     if g:ulti_color_filetype
-        " Adds to filetype favorites
         let ft = &filetype
-        if ft !=# ''
+        " Doesn't trigger if 'no ft' or filetype is specifically excluded
+        if ft !=# '' && index(g:ulti_color_excluded, ft) == -1
             if !has_key(s:favorites, ft)
                 let s:favorites[ft] = []
             endif
@@ -391,6 +399,7 @@ function! s:AddFavorite()
         endif
     endif
 
+    " Adds to global favorites
     if !has_key(s:favorites, 'global')
         let s:favorites['global'] = []
     endif
@@ -543,8 +552,10 @@ function! s:SetFavorite()
     if !exists('g:colors_name')
         let g:colors_name = 'default'
     endif
+    " && index(g:ulti_color_excluded, ft) == -1
     if (has_key(s:favorites, ft) && 
                 \ index(s:favorites[ft], g:colors_name) == -1 &&
+                \ index(g:ulti_color_excluded, ft) == -1 &&
                 \ len(s:favorites[ft]) > 0)
         call <SID>RandomFavorite()
     elseif has_key(s:favorites, 'global') && 
@@ -562,7 +573,8 @@ endfunction
 function! s:RandomFavorite()
     let ft = &filetype
     if g:ulti_color_filetype == 0 || has_key(s:favorites, ft) == 0 ||
-                \ len(s:favorites[ft]) == 0
+                \ len(s:favorites[ft]) == 0 ||
+                \ index(g:ulti_color_excluded, ft) != -1
         if len(s:favorites['global']) == 0
             return -1
         endif
@@ -591,7 +603,7 @@ endfunction
 " not the same as the old filetype. If no global favorites set, returns -1.
 function! s:SituationalRandomFavorite()
     let ft = &filetype
-    if ft ==? s:old_filetype
+    if ft ==# s:old_filetype
         return 0
     else
         let s:old_filetype = ft
