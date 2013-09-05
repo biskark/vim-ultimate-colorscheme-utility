@@ -236,6 +236,7 @@ let s:font_data_loaded = 0
 let s:data_file = expand('<sfile>:p:r') . '.csv'
 let s:font_data_file = expand('<sfile>:p:h') . '/font.csv'
 let s:default_file = expand('<sfile>:p:h') . '/default.csv'
+let s:old_filetype = ''
 " END script variables }}}
 
 " Script Functions {{{
@@ -584,6 +585,21 @@ function! s:RandomFavorite()
 endfunction
 " END RandomFavorite }}}
 
+" s:SituationalRandomFavorite() {{{
+" Function that randomnly chooses a favorite for the selected filetype or
+" chooses a random global if no normal filetype exists IF the new filetype is
+" not the same as the old filetype. If no global favorites set, returns -1.
+function! s:SituationalRandomFavorite()
+    let ft = &filetype
+    if ft ==? s:old_filetype
+        return 0
+    else
+        let s:old_filetype = ft
+        return s:RandomFavorite()
+    endif
+endfunction
+" END SituationalRandomFavorite }}}
+
 " s:LoadFontFavorites() {{{
 " Function that reads font favorites from plugin directory.
 " If no favorites found, loads a default file.
@@ -877,13 +893,22 @@ augroup END
 " END Automatic called on quit }}}
 
 " Automatically called on buffer enter {{{
-" Used for automatic colorscheme choosing
+" Used for automatic colorscheme choosing,
+" A setting of 1 means Random is called everytime.
+" A setting of 2 means Random is called when changing filetypes.
+" A setting of 0 means Random is called only if the current scheme isn't in 
+" the favorites list for the specific filetype.
 augroup UltiVimAutoScheme
     autocmd!
-    if g:ulti_color_always_random
+    if g:ulti_color_always_random == 1
         autocmd BufEnter * call <SID>RandomFavorite()
         if has('gui_running') && g:ulti_color_font_enable
             autocmd BufEnter * call <SID>RandomFontFavorite()
+        endif
+    elseif g:ulti_color_always_random == 2
+        autocmd BufEnter * call <SID>SituationalRandomFavorite()
+        if has('gui_running') && g:ulti_color_font_enable
+            autocmd BufEnter * call <SID>SetFontFavorite()
         endif
     else
         autocmd BufEnter * call <SID>SetFavorite()

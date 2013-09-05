@@ -1,3 +1,29 @@
+0.2.1 - New Features, Documentation Upgrade, New Release
+September 5, 2013
+New Release:
+	After branching this project briefly to work on new features, they have
+	now been integrated into the master branch. See below for details.
+
+New Features:
+	A menu titled "Favorites" is now added to GVim that allows full control of
+	your colorscheme browsing and colorscheme/font favorite-ing without
+	needing to remember the keymappings. The menu is tailored to your personal
+	settings.
+
+	A new state has been added to the g:ulti_color_always_random variable.
+	Now, if is set to 2, a random favorite will be chosen when switching
+	between buffers of different filetypes, but not when switching between
+	buffers of the same filetype. This alleviates an issue where having a
+	shared favorite between two filetypes would eventually result in that one
+	favorite being the inevitable middle ground when the variable was set to
+	0. Note: the default setting is still 0, so the default behavior has not
+	changed.
+
+Documentation Upgrade:
+	In addition to updating the documentation to reflect the new features, the
+	description of the global variables has been updated to hopefully make
+	things clearer.
+
 0.2.0a - Bugfix
 September 3, 2013
 Bug Fixes:

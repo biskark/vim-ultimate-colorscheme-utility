@@ -4,7 +4,7 @@ Author:             Kevin Biskar
 License:            MIT, see LICENSE for more info
 Website:            https://github.com/biskark/vim-ultimate-colorscheme-utility
 Contact:            biskark@gmail.com
-Version:            0.2.0a
+Version:            0.2.1
 
 
 ==============================================================================
@@ -289,34 +289,36 @@ Example:
 g:ulti_color_default_keys~
 Default: 1
 
-This setting controls whether |Ultimate-Colorscheme-Utility| automatically
-sets key mappings. If set to 0, any key mappings you don't define in your
-vimrc file will not be available to you at all. If set to 1, no worries, your
-personal key mappings will trump any defaults, and only those key mappings you
-don't specify will get the defaults.
+If set to 0, any key mappings you don't define in your vimrc file will not be
+available at all. Use this if you don't want any extra command available other
+than those you explicitly allow.
+
+If set to 1, no worries, your personal key mappings will still trump any
+defaults, and only those key mappings you don't specify will be set to
+defaults.
 
 
                                                    *g:ulti_color_gui_menu*
 g:ulti_color_gui_menu~
 Default: 1
 
-This setting controls whether |Ultimate-Colorscheme-Utility| automatically
-creates an additional menu when running a gui vim instance. When set to 1,
-|Ultimate-Colorscheme-Utility| automatically makes a menu titled 'Favorites'
-that is tailored to your other configuration choices. For example, if you did
-not want filetype specific favorites, or you don't want to worry about
-favorite fonts, the Favorites menu will not show those options.
+If set to 1, |Ultimate-Colorscheme-Utility| automatically makes a menu titled
+'Favorites' that is tailored to your other configuration choices if you are
+running a gui Vim. For example, if you did not want filetype specific
+favorites, the Favorites menu will not show those options.
+
+If set to 0, no menu will be made.
 
 
                                                    *g:ulti_color_filetype*
 g:ulti_color_filetype~
 Default: 1
 
-This setting controls whether |Ultimate-Colorscheme-Utility| sets filetype
-specific favorites. Set this to 0 if you want a simpler setup and don't want
-to bother with managing different filetypes.
-Note:
-If 0, this makes |g:ulti_color_quick_add| and |g:ulti_color_quick_remove|
+If this is 1, |Ultimate-Colorscheme-Utility| sets filetype specific favorites.
+
+If this to 0, |Ultimate-Colorscheme-Utility| does not concern itself with the
+current filetype and only has one list of favorites.
+Note: This makes |g:ulti_color_quick_add| and |g:ulti_color_quick_remove|
 irrelevant.
 
 
@@ -324,40 +326,48 @@ irrelevant.
 g:ulti_color_auto_save~
 Default: 1
 
-When 1, this setting automatically saves favorites upon Vim exit. When 0, you
-must save these automatically with the |g:ulti_color_Write_Fav| mapping.
+If this is 1, your favorites are saved automatically when vim exits.
+
+If this is 0, you must save these manually with the |g:ulti_color_Write_Fav|
+mapping.
 
 
                                                    *g:ulti_color_auto_load*
 g:ulti_color_auto_load~
 Default: 1
 
-When 1, this setting automatically loads favorites upon Vim start. When 0, you
-must load these automatically with the |g:ulti_color_Load_Fav| mapping.
+If this is 1, this setting automatically loads favorites upon Vim start.
+
+If this is 0, you must load these automatically with the |g:ulti_color_Load_Fav|
+mapping.
 
 
                                                    *g:ulti_color_quick_add*
 g:ulti_color_quick_add~
 Default: 1
 
-Upon adding a colorscheme or font to favorites, if this is 1, the scheme will be saved
-to the global favorites list as well as the filetype favorites list. If this
-is 0, the scheme will only be added to the global favorites if it's already in
-the favorites list for the current filetype.
-Note:
-This setting is irrelevant if |g:ulti_color_filetype| is set to 0.
+If this is 1, when adding a colorscheme to favorites, the scheme will be saved
+to the global favorites list as well as the filetype favorites list.
+
+If this is 0, the scheme will only be added to the global favorites if it's
+already in the favorites list for the current filetype.
+
+Note: This setting is irrelevant if |g:ulti_color_filetype| is set to 0.
 
 
                                                    *g:ulti_color_quick_remove*
 g:ulti_color_quick_remove~
 Default: 0
 
-Upon removing a colorscheme or font from favorites, if this is 1, the scheme will be
-removed from the global favorites list as well as the filetype favorites list.
+If this is 1, upon removing a colorscheme from favorites, it will be removed
+from the global favorites list as well as the filetype favorites list.
+
 If this is 0, the scheme will only be removed from the global favorites if
-it's not in the favorites list for the current filetype.
-Note:
-This setting is irrelevant if |g:ulti_color_filetype| is set to 0.
+it's not already in the favorites list for the current filetype. In practice
+this means you will have to delete a scheme twice to remove it from the
+filetype and global favorites.
+
+Note: This setting is irrelevant if |g:ulti_color_filetype| is set to 0.
 
 
                                                    *g:ulti_color_font_enable*
@@ -368,8 +378,11 @@ If set to 1, |Ultimate-Colorscheme-Utility| will allow the setting of font
 favorites in addition to colorscheme favorites. When set, this will add six
 key mappings that allow for adding/deleting favorites and for browsing global
 and filetype specific fonts.
-Note:
-This only matters when using GVim. Terminal vim does not control the font
+
+If set to 0, font favorites will be disabled and if g:ulti_color_gui_menu is
+set to 1, there won't be any font related options in the Favorites Menu.
+
+Note: This only matters when using GVim. Terminal vim does not control the font
 settings, the terminal does, so if GVim isn't detected, no mappings are
 created regardless of this setting.
 
@@ -379,23 +392,34 @@ g:ulti_color_verbose~
 Default: 1
 
 If set to 1, this setting will display messages upon the use of most of the
-mappings. If set to 0, only error messages will be displayed.
-Note:
-Some vim installations will not correctly display messages that are only 1
-line long. Sorry!
+mappings.
+
+If set to 0, only error messages will be displayed.
+
+Note: Some vim installations will not correctly display messages that are only 
+1 line long. Sorry!
 
 
                                                    *g:ulti_color_always_random*
 g:ulti_color_always_random~
 Default: 0
 
-Normally, upon BufEnter |Ultimate-Colorscheme-Utility| will only change the
+If set to 0, upon BufEnter |Ultimate-Colorscheme-Utility| will only change the
 colorscheme or font if the newly entered buffer doesn't have the current
-colorscheme or font in its list of favorites. However, if this is set to 1,
-|Ultimate-Colorscheme-Utility| will randomly choose a favorite upon every
-BufEnter regardless of filetype, resulting in a possibly nauseating change of
-colors if you have several favorites and frequently switch between buffers.
-Use at your own risk!
+colorscheme or font in its list of favorites.
+
+If set to 2, |Ultimate-Colorscheme-Utility| will randomly choose a new
+colorscheme when you change between buffers of different filetypes, but not
+when changing between buffers of the same filetype. This offers an
+intermediate level of randomness when working on differnent filetypes and is
+my personal preference.
+Note: If you have deactivated filetype specific favorites, this setting will
+act the same as setting it to 0.
+
+If set to 1, |Ultimate-Colorscheme-Utility| will randomly choose a
+favorite upon every BufEnter regardless of filetype, resulting in a possibly
+nauseating change of colors if you have several favorites and frequently switch
+between buffers. Use at your own risk!
 
 ==============================================================================
 /* vim: set ft=help: */
