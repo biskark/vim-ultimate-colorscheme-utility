@@ -74,7 +74,7 @@ if !exists('g:ulti_color_gui_menu')
 endif
 
 if !exists('g:ulti_color_excluded')
-    let g:ulti_color_excluded = []
+    let g:ulti_color_excluded = ['minibufexpl']
 endif
 " END Global Variables }}}
 
@@ -321,7 +321,7 @@ function! s:CycleFileFavorites(step, ...)
     if g:ulti_color_filetype == 0 || (a:0 == 1 && a:1 == 1)
         let filetype = 'global'
     " Filetype in excluded
-    elseif index(g:ulti_color_excluded, filetype) != -1
+    elseif index(g:ulti_color_excluded, filetype) >= 0
         let filetype = 'global'
     " If no favorites for filetype
     elseif !has_key(s:favorites, filetype) || len(s:favorites[filetype]) == 0
@@ -546,18 +546,21 @@ endfunction
 " s:SetFavorite() {{{
 " Function that detects filetype and sets the colorscheme to a preferred color
 " for that filetype. On startup, g:colors_name may not be set, so checks for
-" that to.
+" that to. Called only when always_random is set to 0.
 function! s:SetFavorite()
     let ft = &filetype
     if !exists('g:colors_name')
         let g:colors_name = 'default'
     endif
-    " && index(g:ulti_color_excluded, ft) == -1
+    " If ... filetype in dictionary, the current scheme isn't in those
+    " favorites, the filetype is not excluded specifically, and the filetype
+    " has at least one stored favorite.
     if (has_key(s:favorites, ft) && 
                 \ index(s:favorites[ft], g:colors_name) == -1 &&
-                \ index(g:ulti_color_excluded, ft) == -1 &&
                 \ len(s:favorites[ft]) > 0)
         call <SID>RandomFavorite()
+    " If ... global in dictionary, the current scheme isn't in it, and
+    " favorites has at least one stored.
     elseif has_key(s:favorites, 'global') && 
                 \ index(s:favorites['global'], g:colors_name) == -1 &&
                 \ len(s:favorites['global']) > 0
@@ -572,9 +575,9 @@ endfunction
 " set, returns -1.
 function! s:RandomFavorite()
     let ft = &filetype
-    if g:ulti_color_filetype == 0 || has_key(s:favorites, ft) == 0 ||
-                \ len(s:favorites[ft]) == 0 ||
-                \ index(g:ulti_color_excluded, ft) != -1
+    if g:ulti_color_filetype == 0 ||
+                \ has_key(s:favorites, ft) == 0 ||
+                \ len(s:favorites[ft]) == 0
         if len(s:favorites['global']) == 0
             return -1
         endif
@@ -600,14 +603,29 @@ endfunction
 " s:SituationalRandomFavorite() {{{
 " Function that randomnly chooses a favorite for the selected filetype or
 " chooses a random global if no normal filetype exists IF the new filetype is
-" not the same as the old filetype. If no global favorites set, returns -1.
+" not the same as the old filetype. If no global favorites set, returns -1 via
+" the call to RandomFavorite()
 function! s:SituationalRandomFavorite()
     let ft = &filetype
-    if ft ==# s:old_filetype
-        return 0
+    let retval = 0
+    let is_first_time = 0
+    " Initialize at startup on infrequent or unfavorited filetypes
+    if s:old_filetype ==# ''
+        let retval = s:RandomFavorite()
+        let is_first_time = 1
+    endif
+    " If current ft is the same as the last one, if current ft is considered
+    " blank, or if it is excluded by user
+    if ft ==# s:old_filetype ||
+                \ ft ==# '' ||
+                \ index(g:ulti_color_excluded, ft) >= 0
+        return retval
     else
         let s:old_filetype = ft
-        return s:RandomFavorite()
+        if is_first_time
+            return retval
+        else
+            return s:RandomFavorite()
     endif
 endfunction
 " END SituationalRandomFavorite }}}
@@ -685,7 +703,7 @@ function! s:SetFontFavorite()
         call <SID>RandomFontFavorite()
     endif
 endfunction
-" END SetFavorite }}}
+" END SetFontFavorite }}}
 
 " s:RandomFontFavorite() {{{
 " Function that randomnly chooses a favorite font for the selected filetype or
@@ -710,7 +728,7 @@ function! s:RandomFontFavorite()
     endif
     return 0
 endfunction
-" END RandomFavorite }}}
+" END RandomFontFavorite }}}
 
 " s:AddFontFavorite() {{{
 " Add current font to the favorites list. Doesn't add duplicates.

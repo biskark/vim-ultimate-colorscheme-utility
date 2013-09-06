@@ -421,5 +421,28 @@ favorite upon every BufEnter regardless of filetype, resulting in a possibly
 nauseating change of colors if you have several favorites and frequently switch
 between buffers. Use at your own risk!
 
+
+                                                   *g:ulti_color_excluded*
+g:ulti_color_excluded~
+Default: ['minibufexpl']
+
+This is a list of filetypes that are to be ignored by
+|Ultimate-Colorscheme-Utility| for colorscheme favorites. The utility of this
+is when you have |g:ulti_color_filetype| set to 1 but you don't want vim to
+recognize one or more particular filetypes for the purpose of favorites. This
+is most usefule when |g:ulti_color_always_random| is set to 2, because the
+random switch will occur on every filetype change, even if it's to a temporary
+buffer created by a vim plugin or help file.
+
+The default has 'minibufexpl' due to a known bug that sometimes causes buffer
+change to go through the minibufexpl bar half way through, resulting in
+erratic behavior. This can be safely ignored for people who don't use this
+plugin.
+
+Example:
+>
+    let g:ulti_color_excluded = ['minibufexpl', 'nerdtree', 'help', 'tagbar']
+<
+
 ==============================================================================
 /* vim: set ft=help: */

@@ -1,3 +1,13 @@
+0.2.2 - New Feature
+September 5, 2013
+	Added the ability to specify a list of excluded filetypes that are not
+	treated as special. This means that this will not trigger any filetype
+	specific acitities, such as switching the colorscheme when changing into a
+	buffer, or allowing the creation of new favorites for that filetype. This
+	is most handy for special vim/plugin filetypes, like 'help', 'nerdtree',
+	'minibufexp', 'tagbar', etc..., that are opened for more temporary
+	purposes.
+
 0.2.1 - New Features, Documentation Upgrade, New Release
 September 5, 2013
 New Release:
