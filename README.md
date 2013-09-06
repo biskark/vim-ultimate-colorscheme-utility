@@ -1,17 +1,22 @@
-Vim Ultimate Colorscheme Utility, version 0.2.1
+Vim Ultimate Colorscheme Utility, version 0.2.2
 =======================================
 
 Vim plugin that enables colorscheme and font browsing, choosing favorites, and
 automatic/manual scheme switching based on the current filetype. You no longer
 have to settle for one favorite scheme or guifont.
 
-New Feature
-===========
+New Features
+============
 ####Menu Integration
 
 Ultimate Colorscheme Utility is now working on better integration into GVim.
 There is now a 'Favorites' menu that enables all the functionality of the
 plugin at the push of a button.
+
+####Excluded Filetypes
+
+Now you can specify which filetypes Ultimate Colorscheme Utility can ignore for
+even more customizability.
 
 Features
 ========
