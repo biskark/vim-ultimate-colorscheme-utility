@@ -882,10 +882,10 @@ function! s:MakeGuiMenu()
         :anoremenu Favorites.Favorite\ Fonts.Remove\ Font\ from\ Favorites :call <SID>RemoveFontFavorite()<CR>
     endif
 
-    :anoremenu Favorites.Manual\ Save/Load.Load\ Colorscheme\ Favorites<Tab>(done automatically) :call <SID>LoadFavorites()<CR>
-    :anoremenu Favorites.Manual\ Save/Load.Save\ Colorscheme\ Favorites<Tab>(done automatically) :call <SID>WriteFavorites()<CR>
-    :anoremenu Favorites.Manual\ Save/Load.Load\ Font\ Favorites<Tab>(done automatically) :call <SID>LoadFontFavorites()<CR>
-    :anoremenu Favorites.Manual\ Save/Load.Save\ Font\ Favorites<Tab>(done automatically) :call <SID>WriteFontFavorites()<CR>
+    :anoremenu Favorites.Manual\ Save/Load.Load\ Colorscheme\ Favorites<Tab> :call <SID>LoadFavorites()<CR>
+    :anoremenu Favorites.Manual\ Save/Load.Save\ Colorscheme\ Favorites<Tab> :call <SID>WriteFavorites()<CR>
+    :anoremenu Favorites.Manual\ Save/Load.Load\ Font\ Favorites<Tab> :call <SID>LoadFontFavorites()<CR>
+    :anoremenu Favorites.Manual\ Save/Load.Save\ Font\ Favorites<Tab> :call <SID>WriteFontFavorites()<CR>
     :menu Favorites.-Read/Write- :
 
     :anoremenu Favorites.See\ Favorites :call <SID>SeeFavorites()<CR>
