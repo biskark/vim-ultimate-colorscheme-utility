@@ -47,7 +47,6 @@ should be avoided as github will always be more up to date.
 ```bash
 cd ~/.vim/bundle
 git clone https://github.com/biskark/vim-ultimate-colorscheme-utility.git
-git checkout menu_integration
 ```
 
 ### via archive, the bad method
