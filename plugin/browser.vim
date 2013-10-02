@@ -74,7 +74,7 @@ if !exists('g:ulti_color_gui_menu')
 endif
 
 if !exists('g:ulti_color_excluded')
-    let g:ulti_color_excluded = ['minibufexpl']
+    let g:ulti_color_excluded = ['minibufexpl', 'qf']
 endif
 " END Global Variables }}}
 
